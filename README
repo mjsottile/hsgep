@@ -1,0 +1,57 @@
+====================================================
+= HSGEP: Gene Expression Programming in Haskell    =
+= Version 0.1                                      =
+= Author: Matthew Sottile (mjsottile@computer.org) =
+====================================================
+
+1.0: Introduction
+-----------------
+
+This package implements the Gene Expression Programming algorithm invented
+by Candida Ferreira.  See the following paper for a good, concise explanation
+of the method:
+
+Ferreira, C., 2001. Gene Expression Programming: A New Adaptive
+  Algorithm for Solving Problems. Complex Systems, Vol. 13, issue 2:87-129.
+  http://www.gene-expression-programming.com/webpapers/abstracts.asp#01
+
+GEP is an evolutionary algorithm for solving optimization problems.  The
+introduction to the paper cited above provides a good explanation of what
+differentiates GEP from GP and GAs.
+
+2.0: Background
+---------------
+
+This project is an ancestor of an earlier effort to build a generic framework
+for using GEP, originally in Java.  The move to a functional language
+(originally SML, now Haskell) was because:
+
+ - At its core, GEP is focused on manipulating symbolic sequences and
+   tree structures.  List and user defined data types in Haskell are very
+   well suited to this.
+
+ - Functional languages naturally support functions being first class
+   citizens, being passed around as arguments to functions.  While
+   this abstraction is possible using object interfaces and
+   hierarchies (which is precisely what the Java version used), it
+   felt more cumbersome to manage and code up.
+
+ - Pattern matching and strict type checking provide very strong
+   checks on the core of the library to ensure that some classes of
+   bugs are not present.  For example, being able to guarantee that a pattern
+   match is exhaustive at compile time is preferable to potential runtime
+   errors that may result if such compilation time checks are not performed.
+   
+
+3.0: Usage
+----------
+
+TODO
+
+4.0: FAQ
+--------
+
+TODO.  Ask a question!
+
+
+
