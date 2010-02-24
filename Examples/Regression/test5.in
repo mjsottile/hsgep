@@ -1,0 +1,27 @@
+rateMutate = 0.075
+rate1R     = 0.3
+rate2R     = 0.3
+rateGR     = 0.075
+rateIS     = 0.3
+rateRIS    = 0.2
+rateGT     = 0.25
+
+genomeTerminals     = a
+genomeNonterminals  = +-/*
+genomeMaxArity      = 2
+genomeNumGenes      = 3
+genomeHeadLength    = 30
+genomeGeneConnector = +
+
+maxISLen  = 3
+maxRISLen = 4
+
+populationSize = 150
+
+rouletteExponent = 1.10
+
+maxFitness = 75000.0
+
+numGenerations = 200
+
+selectionRange = 1000.0

@@ -1,0 +1,34 @@
+TODO
+----
+
+can maxfitness parameter be computed based on input size of test data set?
+
+move to cabal
+
+make generic driver that can be used by specific applications to build the
+main for the program.
+
+support for constants
+
+test multigenic chromosomes
+
+move arity test stuff into genome and make it part of the param spec file
+
+test code for emitting graphviz of trees
+
+more regression example test files
+
+implement another example (ie: something based on logic?)
+
+concurrent fitness evaluation
+
+write HOWTO for new examples
+
+quickcheck / hunit
+
+properly haddockize things -- current docs are a mish-mash, not sure if 
+proper cross linking is performed.
+
+integrate chart plotting for fitness
+
+properly monadify the random number generation
