@@ -1,0 +1,27 @@
+Name:          HSGEP
+Version:       0.1.0
+Cabal-Version: >= 1.2
+License:       BSD3
+License-File:  LICENSE
+Copyright:     (c) 2009-2010 Matthew Sottile
+Author:        Matthew Sottile
+Maintainer:    Matthew Sottile <mjsottile@computer.org>
+Stability:     alpha
+Homepage:      http://github.com/hsgep/
+Category:      AI
+Synopsis:      Gene Expression Programming evolutionary algorithm in Haskell
+Build-Type:    Simple
+Description:   GEP Description Goes Here
+
+Library
+  Build-Depends:      base, random, mtl, parsec, network, haskell98
+  Exposed-modules:
+    GEP.Fitness,  GEP.GeneOperations, GEP.MonadicGeneOperations,
+    GEP.Params,   GEP.Random,         GEP.Rmonad,
+    GEP.TimeStep, GEP.Selection,      GEP.Util.ConfigurationReader,
+    GEP.Types,    GEP.GenericDriver,  GEP.Examples.Regression.FitnessInput,
+    GEP.Examples.Regression.ArithmeticIndividual
+
+Executable HSGEP_Regression
+  Main-Is:         GEP/Examples/Regression/Driver.hs
+
