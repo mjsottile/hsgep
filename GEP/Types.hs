@@ -5,12 +5,15 @@
 -}
 
 module GEP.Types (
+    -- * Types
     Symbol,
     Gene,
     SymTable,
     Genome(..),
     Chromosome,
     Individual,
+
+    -- * Functions
     tailLength,
     geneLength,
     allsymbols,
@@ -50,20 +53,26 @@ data Genome = Genome {
       numGenes      :: Int       -- ^ Number of genes per chromosome
 } deriving Show
 
--- | Given a genome, provide the list of all symbols possible in a chromosome
-allsymbols :: Genome -> [Symbol]
+-- | Given a genome, provide the list of all symbols possible in a chromosome.
+--   This is just nonterminals ++ terminals.
+allsymbols :: Genome   -- ^ Genome 
+           -> [Symbol] -- ^ List of symbols
 allsymbols g = (terminals g)++(nonterminals g)
 
 -- | Return the length of the tail of a gene for a given genome
-tailLength :: Genome -> Int
+tailLength :: Genome   -- ^ Genome
+           -> Int      -- ^ Number of symbols in a gene tail
 tailLength g = ((headLength g) * ((maxArity g)-1))+1
 
 -- | Return length of a gene (tail + head) for a given genome
-geneLength :: Genome -> Int
+geneLength :: Genome   -- ^ Genome 
+           -> Int      -- ^ Total length of a gene.
 geneLength g = (headLength g) + (tailLength g)
 
 -- | Test if a symbol is a nonterminal
-isNonterminal :: Symbol -> Genome -> Bool
+isNonterminal :: Symbol  -- ^ Symbol to test 
+              -> Genome  -- ^ Genome providing context
+              -> Bool    -- ^ True if symbol is a nonterminal, false otherwise
 isNonterminal s g =
   let isNT []                 = False
       isNT (x:_)  | (s == x)  = True
@@ -72,10 +81,13 @@ isNonterminal s g =
     isNT (nonterminals g)
 
 -- | Fracture a chromosome into a set of genes
-chromToGenes :: [Symbol] -> Int -> [[Symbol]]
+chromToGenes :: Chromosome  -- ^ Chromosome to split into a set of genes 
+             -> Int         -- ^ Length of a single gene
+             -> [Gene]      -- ^ Ordered list of genes from chromosome
 chromToGenes [] _ = []
 chromToGenes c  glen = (take glen c):(chromToGenes (drop glen c) glen)
 
 -- | Assemble a chromosome from a set of genes
-genesToChrom :: [[Symbol]] -> [Symbol]
+genesToChrom :: [Gene]      -- ^ List of genes
+             -> Chromosome  -- ^ Chromosome assembled from genes
 genesToChrom genes = foldl (++) [] genes

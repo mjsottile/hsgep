@@ -7,6 +7,8 @@
 --   are floating point numbers.  That likely should change for general
 --   purpose usage.
 --
+--   mjsottile\@computer.org
+--
 module GEP.Fitness (
   fitness_tester,
   fitness_filter,
