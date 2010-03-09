@@ -6,12 +6,12 @@
 
 module GEP.Types (
     -- * Types
+    Genome(..),
     Symbol,
     Gene,
-    SymTable,
-    Genome(..),
     Chromosome,
     Individual,
+    SymTable,
 
     -- * Functions
     tailLength,
@@ -36,7 +36,11 @@ type Chromosome = [Symbol]
 -- | An individual is a chromosome
 type Individual = Chromosome
 
--- | Symbol table used for fitness tests
+-- | Symbol table used for fitness tests.  We assume that there is exactly
+--   one pair per symbol.  If there are symbols missing, fitness testing
+--   may fail (the library does not have facilities yet to allow for
+--   default values).  If a symbol occurs multiple times in the symbol
+--   table, no guarantee is provided for which value will be chosen.
 type SymTable a = [(Symbol,a)]
 
 -- | Data type representing a genome.  The genome contains all necessary
