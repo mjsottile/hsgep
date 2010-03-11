@@ -19,7 +19,7 @@ module GEP.Rmonad (
 ) where
 
 import System.Random hiding (next)
-import Control.Monad.State
+import Control.Monad.State.Strict
 
 newtype Rmonad s a = S (State s a)
     deriving (Monad)
