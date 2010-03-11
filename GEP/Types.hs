@@ -1,8 +1,7 @@
-{-|
-   Types for GEP development.
-
-   Author: mjsottile\@computer.org
--}
+-- | This module defines the types used for implementing GEP problems
+--   and operations.  A few functions are also provided for convenience
+--   here for performing common operations.
+--
 
 module GEP.Types (
     -- * Types
