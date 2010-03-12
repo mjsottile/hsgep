@@ -1,0 +1,40 @@
+matt@matt:~/projects/hsgep$ 
+matt@matt:~/projects/hsgep$ runghc Setup.hs configure --user
+Configuring HSGEP-0.1.0...
+matt@matt:~/projects/hsgep$ runghc Setup.hs build
+Preprocessing library HSGEP-0.1.0...
+Preprocessing executables for HSGEP-0.1.0...
+Building HSGEP-0.1.0...
+[ 1 of 13] Compiling GEP.Examples.Regression.FitnessInput ( GEP/Examples/Regression/FitnessInput.hs, dist/build/GEP/Examples/Regression/FitnessInput.o )
+[ 2 of 13] Compiling GEP.Types        ( GEP/Types.hs, dist/build/GEP/Types.o )
+[ 3 of 13] Compiling GEP.Examples.Regression.ArithmeticIndividual ( GEP/Examples/Regression/ArithmeticIndividual.hs, dist/build/GEP/Examples/Regression/ArithmeticIndividual.o )
+[ 4 of 13] Compiling GEP.Rmonad       ( GEP/Rmonad.hs, dist/build/GEP/Rmonad.o )
+[ 5 of 13] Compiling GEP.Selection    ( GEP/Selection.hs, dist/build/GEP/Selection.o )
+[ 6 of 13] Compiling GEP.Params       ( GEP/Params.hs, dist/build/GEP/Params.o )
+[ 7 of 13] Compiling GEP.Random       ( GEP/Random.hs, dist/build/GEP/Random.o )
+[ 8 of 13] Compiling GEP.Util.ConfigurationReader ( GEP/Util/ConfigurationReader.hs, dist/build/GEP/Util/ConfigurationReader.o )
+[ 9 of 13] Compiling GEP.GeneOperations ( GEP/GeneOperations.hs, dist/build/GEP/GeneOperations.o )
+[10 of 13] Compiling GEP.MonadicGeneOperations ( GEP/MonadicGeneOperations.hs, dist/build/GEP/MonadicGeneOperations.o )
+[11 of 13] Compiling GEP.Fitness      ( GEP/Fitness.hs, dist/build/GEP/Fitness.o )
+[12 of 13] Compiling GEP.TimeStep     ( GEP/TimeStep.hs, dist/build/GEP/TimeStep.o )
+[13 of 13] Compiling GEP.GenericDriver ( GEP/GenericDriver.hs, dist/build/GEP/GenericDriver.o )
+/usr/bin/ar: creating dist/build/libHSHSGEP-0.1.0.a
+[ 1 of 15] Compiling GEP.Rmonad       ( GEP/Rmonad.hs, dist/build/HSGEP_Regression/HSGEP_Regression-tmp/GEP/Rmonad.o )
+[ 2 of 15] Compiling GEP.Params       ( GEP/Params.hs, dist/build/HSGEP_Regression/HSGEP_Regression-tmp/GEP/Params.o )
+[ 3 of 15] Compiling GEP.Types        ( GEP/Types.hs, dist/build/HSGEP_Regression/HSGEP_Regression-tmp/GEP/Types.o )
+[ 4 of 15] Compiling GEP.Util.ConfigurationReader ( GEP/Util/ConfigurationReader.hs, dist/build/HSGEP_Regression/HSGEP_Regression-tmp/GEP/Util/ConfigurationReader.o )
+[ 5 of 15] Compiling GEP.Random       ( GEP/Random.hs, dist/build/HSGEP_Regression/HSGEP_Regression-tmp/GEP/Random.o )
+[ 6 of 15] Compiling GEP.Fitness      ( GEP/Fitness.hs, dist/build/HSGEP_Regression/HSGEP_Regression-tmp/GEP/Fitness.o )
+[ 7 of 15] Compiling GEP.Selection    ( GEP/Selection.hs, dist/build/HSGEP_Regression/HSGEP_Regression-tmp/GEP/Selection.o )
+[ 8 of 15] Compiling GEP.GeneOperations ( GEP/GeneOperations.hs, dist/build/HSGEP_Regression/HSGEP_Regression-tmp/GEP/GeneOperations.o )
+[ 9 of 15] Compiling GEP.MonadicGeneOperations ( GEP/MonadicGeneOperations.hs, dist/build/HSGEP_Regression/HSGEP_Regression-tmp/GEP/MonadicGeneOperations.o )
+[10 of 15] Compiling GEP.TimeStep     ( GEP/TimeStep.hs, dist/build/HSGEP_Regression/HSGEP_Regression-tmp/GEP/TimeStep.o )
+[11 of 15] Compiling GEP.GenericDriver ( GEP/GenericDriver.hs, dist/build/HSGEP_Regression/HSGEP_Regression-tmp/GEP/GenericDriver.o )
+[12 of 15] Compiling GEP.Examples.Regression.ArithmeticIndividual ( GEP/Examples/Regression/ArithmeticIndividual.hs, dist/build/HSGEP_Regression/HSGEP_Regression-tmp/GEP/Examples/Regression/ArithmeticIndividual.o )
+[13 of 15] Compiling GEP.Examples.Regression.FitnessInput ( GEP/Examples/Regression/FitnessInput.hs, dist/build/HSGEP_Regression/HSGEP_Regression-tmp/GEP/Examples/Regression/FitnessInput.o )
+[14 of 15] Compiling GEP.Examples.Regression.MaximaClient ( GEP/Examples/Regression/MaximaClient.hs, dist/build/HSGEP_Regression/HSGEP_Regression-tmp/GEP/Examples/Regression/MaximaClient.o )
+[15 of 15] Compiling Main             ( GEP/Examples/Regression/Driver.hs, dist/build/HSGEP_Regression/HSGEP_Regression-tmp/Main.o )
+Linking dist/build/HSGEP_Regression/HSGEP_Regression ...
+matt@matt:~/projects/hsgep$ ./dist/build/
+autogen/          GEP/              HSGEP_Regression/ 
+matt@matt:~/projects/hsgep$ ./dist/build/HSGEP_Regression/HSGEP_Regression ./Examples/Regression/test1.in ./Examples/Regression/test1.csv 
