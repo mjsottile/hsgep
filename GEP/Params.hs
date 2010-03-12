@@ -18,12 +18,12 @@ module GEP.Params (
 --   parameters related to specific genetic operators.
 data SimParams = SimParams {
       popSize :: Int,             -- ^ Population size
-      rouletteExponent :: Float,  -- ^ Exponent for defining the roulette
+      rouletteExponent :: Double,  -- ^ Exponent for defining the roulette
                                   --   wheel bin sizes
-      maxFitness :: Float,        -- ^ Fitness of the ideal individual
+      maxFitness :: Double,        -- ^ Fitness of the ideal individual
       numGenerations :: Int,      -- ^ Number of generations to run the
                                   --   algorithm for
-      selectionRange :: Float,    -- ^ Parameter m for fitness value
+      selectionRange :: Double,    -- ^ Parameter m for fitness value
                                   --   computation from the GEP paper.
       maxISLen :: Int,            -- ^ Maximum length of an IS transpose seq.
       maxRISLen :: Int            -- ^ Maximum length of an RIS transpose seq.
@@ -32,15 +32,15 @@ data SimParams = SimParams {
 -- | The Rates structure is used to hold the probability of various events
 --   occurring during the evolution of the GEP algorithm.  
 data Rates = Rates {
-      pMutate :: Float, -- ^ Probability of any single symbol being mutated
+      pMutate :: Double, -- ^ Probability of any single symbol being mutated
                         --   per individual
-      pIS :: Float,     -- ^ Probability of an individual experiencing
+      pIS :: Double,     -- ^ Probability of an individual experiencing
                         --   insertion sequence transposition
-      pRIS :: Float,    -- ^ Probability of an individual experiencing
+      pRIS :: Double,    -- ^ Probability of an individual experiencing
                         --   root insertion sequence transposition
-      pGT :: Float,     -- ^ Probability of an individual experiencing
+      pGT :: Double,     -- ^ Probability of an individual experiencing
                         --   gene transposition
-      p1R :: Float,     -- ^ Probability of a 1pt recombination event
-      p2R :: Float,     -- ^ Probability of a 2pt recombination event
-      pGR :: Float      -- ^ Probability of a gene recombination event
+      p1R :: Double,     -- ^ Probability of a 1pt recombination event
+      p2R :: Double,     -- ^ Probability of a 2pt recombination event
+      pGR :: Double      -- ^ Probability of a gene recombination event
 } deriving Show

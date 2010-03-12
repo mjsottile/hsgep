@@ -42,18 +42,18 @@ entry = do
 
 --  END PARSEC STUFF
 
-type FitnessDict = [[(Char,Float)]]
+type FitnessDict = [[(Char,Double)]]
 
-dictify :: [String] -> [[String]] -> (FitnessDict, [Float])
+dictify :: [String] -> [[String]] -> (FitnessDict, [Double])
 dictify lbls values =
     (map (\j -> zip (init charLbls) j) (init floatValues),
      map last floatValues)
     where
       charLbls = map head lbls
-      floatValues = map (\j -> map (\i -> (read i) :: Float) j) values
+      floatValues = map (\j -> map (\i -> (read i) :: Double) j) values
 
 -- function that takes a filename and returns a dictionary
-readFitnessInput :: String -> IO (FitnessDict,[Float])
+readFitnessInput :: String -> IO (FitnessDict,[Double])
 readFitnessInput fname = do
   result <- parseFromFile csvfile fname
   case result of Left err -> do putStrLn "Bad regression fitness input!"

@@ -22,20 +22,20 @@ extractParameters config = (r,g,s)
     where
       s = SimParams { 
 	    popSize          = fromJust (lookupInt "populationSize" config),
-	    selectionRange   = fromJust (lookupFloat "selectionRange" config),
-	    maxFitness       = fromJust (lookupFloat "maxFitness" config),
+	    selectionRange   = fromJust (lookupDouble "selectionRange" config),
+	    maxFitness       = fromJust (lookupDouble "maxFitness" config),
 	    numGenerations   = fromJust (lookupInt "numGenerations" config),
 	    maxISLen         = fromJust (lookupInt "maxISLen" config),
 	    maxRISLen        = fromJust (lookupInt "maxRISLen" config),
-	    rouletteExponent = fromJust (lookupFloat "rouletteExponent" config) 
+	    rouletteExponent = fromJust (lookupDouble "rouletteExponent" config) 
 	  }
-      r = Rates { pMutate = fromJust (lookupFloat "rateMutate" config),
-	          p1R     = fromJust (lookupFloat "rate1R" config),
-	          p2R     = fromJust (lookupFloat "rate2R" config),
-	          pGR     = fromJust (lookupFloat "rateGR" config),
-	          pIS     = fromJust (lookupFloat "rateIS" config),
-	          pRIS    = fromJust (lookupFloat "rateRIS" config),
-	          pGT     = fromJust (lookupFloat "rateGT" config) 
+      r = Rates { pMutate = fromJust (lookupDouble "rateMutate" config),
+	          p1R     = fromJust (lookupDouble "rate1R" config),
+	          p2R     = fromJust (lookupDouble "rate2R" config),
+	          pGR     = fromJust (lookupDouble "rateGR" config),
+	          pIS     = fromJust (lookupDouble "rateIS" config),
+	          pRIS    = fromJust (lookupDouble "rateRIS" config),
+	          pGT     = fromJust (lookupDouble "rateGT" config) 
 	        }
       g = Genome { 
 	    terminals     = fromJust (lookupString "genomeTerminals" config),
@@ -61,10 +61,10 @@ readParameters filename =
 -- lookup helpers: float, int, char, and string versions
 --
 
-lookupFloat :: String -> [(String,String)] -> Maybe Float
-lookupFloat _ [] = Nothing
-lookupFloat k ((key,value):_) | (k==key)  = Just (read value)
-lookupFloat k ((_,_):kvs)     | otherwise = lookupFloat k kvs
+lookupDouble :: String -> [(String,String)] -> Maybe Double
+lookupDouble _ [] = Nothing
+lookupDouble k ((key,value):_) | (k==key)  = Just (read value)
+lookupDouble k ((_,_):kvs)     | otherwise = lookupDouble k kvs
 
 lookupInt :: String -> [(String,String)] -> Maybe Int
 lookupInt _ [] = Nothing

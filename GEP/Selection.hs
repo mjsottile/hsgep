@@ -25,7 +25,6 @@ module GEP.Selection (
 ) where
 
 import GEP.Types
-import System.Random hiding (next)
 import GEP.Rmonad
 import List (sort)
 
@@ -35,8 +34,8 @@ import List (sort)
   We may return nothing if an empty set is passed in to begin with, so
   the return type is a Maybe pair.
 -}
-getBest :: [(Float,Individual)]      -- ^ Fitness/Individual pairs
-        -> Maybe (Float,Individual)  -- ^ Best pair, or Nothing if no such pair
+getBest :: [(Double,Individual)]      -- ^ Fitness/Individual pairs
+        -> Maybe (Double,Individual)  -- ^ Best pair, or Nothing if no such pair
 getBest []          = Nothing
 getBest individuals =
   let innerBest [] bi bf = Just (bf,bi)
@@ -49,7 +48,7 @@ getBest individuals =
   in
     innerBest (tail individuals) firstI firstB
 
-weight_function :: Float -> Float -> Float
+weight_function :: Double -> Double -> Double
 weight_function n e =
     1.0 / (n ** e)
 
@@ -80,7 +79,7 @@ innerSelect n (i:is) (x:xs) l =
   this decrease is linear.  The list that is returned is the width of each slot
   such that the total of the weights adds to 1.0.
 -}
-generate_roulette_weights :: Float -> Float -> [Float]
+generate_roulette_weights :: Double -> Double -> [Double]
 generate_roulette_weights n e =
     map (\i -> i / sx) weights
     where
@@ -93,7 +92,7 @@ generate_roulette_weights n e =
   is used to perform the actual selection after a set of roulette weights are
   generated.
 -}
-roulette :: (RandomGen s) => [Float] -> Int -> Rmonad s [Int]
+roulette :: [Double] -> Int -> GEPMonad [Int]
 roulette _ 0       = do return []
 roulette weights n =
   do val <- nextF 1.0

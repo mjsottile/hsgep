@@ -15,14 +15,14 @@ module GEP.Random (
 
 import GEP.Types
 import GEP.Params
-import System.Random hiding (next)
 import GEP.Rmonad
+import System.Random.Mersenne.Pure64
 
 {-|
   Select a random symbol from the provided list.
 -}
-randomSymbol :: (RandomGen s) => [Symbol]        -- ^ List of symbols
-                              -> Rmonad s Symbol -- ^ Selected symbol
+randomSymbol :: [Symbol]        -- ^ List of symbols
+             -> GEPMonad Symbol-- ^ Selected symbol
 randomSymbol syms =
   do index <- nextR (length syms)
      return (syms !! (index-1))
@@ -30,10 +30,10 @@ randomSymbol syms =
 {-|
   Select a sequence of random symbols from the provided list.
 -}
-randomSymbolList :: (RandomGen s) => [Symbol]          -- ^ List of symbols
-                                  -> Int               -- ^ Number to select
-                                  -> Rmonad s [Symbol] -- ^ List of selected 
-                                                       --   symbols
+randomSymbolList :: [Symbol]          -- ^ List of symbols
+                 -> Int               -- ^ Number to select
+                 -> GEPMonad [Symbol] -- ^ List of selected 
+                                           --   symbols
 randomSymbolList _    0 = do return []
 randomSymbolList syms n =
   do current <- randomSymbol syms
@@ -41,10 +41,9 @@ randomSymbolList syms n =
      return ([current]++rest)
 
 -- | Generate a new individual given a genome specification.
-newIndividual :: (RandomGen s) 
-              => Genome              -- ^ Genome for individual
+newIndividual :: Genome              -- ^ Genome for individual
               -> Int                 -- ^ Number of genes to generate
-              -> Rmonad s Individual
+              -> GEPMonad Individual
 newIndividual _ 0 = do return []
 newIndividual g n =
   do hI <- randomSymbolList (allsymbols g) head_len
@@ -57,17 +56,16 @@ newIndividual g n =
 
 -- |Create a population of fresh random individuals given a genome
 -- |specification.
-newPopulation :: (RandomGen s) 
-              => Genome   -- ^ Genome of population
+newPopulation :: Genome   -- ^ Genome of population
               -> Int      -- ^ Number of individuals to create
-              -> Rmonad s [Individual]
+              -> GEPMonad [Individual]
 newPopulation _ 0 = do return []
 newPopulation g n =
   do p <- newPopulation g (n-1)
      i <- newIndividual g (numGenes g)
      return ([i]++p)
 
-mutateSymbol :: (RandomGen s) => Genome -> Rates -> Symbol -> Float -> Bool -> Rmonad s Symbol
+mutateSymbol :: Genome -> Rates -> Symbol -> Double -> Bool -> GEPMonad Symbol
 mutateSymbol g r _ p True | (p < (pMutate r)) = 
   do s <- randomSymbol (allsymbols g)
      return s
@@ -79,7 +77,7 @@ mutateSymbol g r _ p False | (p < (pMutate r)) =
 mutateSymbol _ _ s _ _ | otherwise = 
   do return s 
 
-mutateGene :: (RandomGen s) => Genome -> Rates -> [Symbol] -> Rmonad s [Symbol]
+mutateGene :: Genome -> Rates -> [Symbol] -> GEPMonad [Symbol]
 mutateGene_ _ [] = do return []
 mutateGene g r (s:ss) =
   do prob <- nextF 1.0
@@ -87,7 +85,7 @@ mutateGene g r (s:ss) =
      newss <- mutate g r ss
      return ([news]++newss)
 
-mutate :: (RandomGen s) => Genome -> Rates -> [Symbol] -> Rmonad s [Symbol]
+mutate :: Genome -> Rates -> [Symbol] -> GEPMonad [Symbol]
 mutate g r s =
   do
     genes' <- mapM (\i -> mutateGene g r i) genes

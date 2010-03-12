@@ -1,6 +1,6 @@
 module GEP.GenericDriver where
 
-import System.Random
+import System.Random.Mersenne.Pure64
 import GEP.TimeStep
 import GEP.Rmonad
 import GEP.Random
@@ -8,7 +8,7 @@ import GEP.Types
 import GEP.Params
 
 -- | Fitness function type
-type FitnessFunction a b = a -> b -> Float -> Float -> Float
+type FitnessFunction a b = a -> b -> Double -> Double -> Double
 
 -- | Function to express an individual into a list of ET structures
 type ExpressionFunction a = Individual -> Genome -> a
@@ -20,7 +20,7 @@ type TestCase a = SymTable a
 type TestDict a = [TestCase a]
 
 -- | The set of outputs expected for each entry in the test dictionary
-type TestOuts = [Float]
+type TestOuts = [Double]
 
 {-|
   Generic driver to be called from specific GEP program instances in their
@@ -33,13 +33,13 @@ gepDriver :: SimParams  -- ^ Simulation parameters
           -> TestOuts   -- ^ Expected test results for test dictionary
           -> FitnessFunction a (TestCase b) -- ^ Fitness testing function
           -> ExpressionFunction a        -- ^ String to ET expression function
-          -> IO (Float,[String])         -- ^ Return best individual fitness and population
+          -> IO (Double,[String])         -- ^ Return best individual fitness and population
 gepDriver params rs gnome testdict testouts fitness_evaluate expression_function = do
   -- create initial population
   (initialPopulation,rngState) <- return $ runRmonad 
                                            (newPopulation gnome 
                                                           (popSize params))
-                                           (mkStdGen 1)
+                                           (pureMT 1)
 
   -- Step 3: run the multistep iterator to evolve the population.  this
   --         is the core of the GEP process.  Pass same rngState returned

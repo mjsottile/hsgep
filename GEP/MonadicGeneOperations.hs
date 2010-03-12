@@ -15,7 +15,6 @@
 -}
 module GEP.MonadicGeneOperations where
 
-import System.Random
 import GEP.Rmonad
 import GEP.GeneOperations
 import GEP.Types
@@ -24,10 +23,10 @@ import GEP.Params
 {-|
    IS Transposition helper
 -}
-isTransposer :: (RandomGen s) => Genome ->
-                                 SimParams ->
-                                 Individual ->
-                                 Rmonad s [Symbol]
+isTransposer :: Genome ->
+                SimParams ->
+                Individual ->
+                GEPMonad [Symbol]
 isTransposer genome params who =
   do takelen   <- nextR (maxISLen params)
      takepos   <- nextR ((geneLength genome)-takelen)
@@ -38,10 +37,10 @@ isTransposer genome params who =
 {-|
    RIS Transposition helper
 -}
-risTransposer :: (RandomGen s) => Genome -> 
-                                  SimParams ->
-                                  Individual ->
-                                  Rmonad s [Symbol]
+risTransposer :: Genome -> 
+                 SimParams ->
+                 Individual ->
+                 GEPMonad [Symbol]
 risTransposer genome params who =
   do takelen <- nextR (maxRISLen params)
      takepos <- nextR ((headLength genome)-1)
@@ -51,9 +50,9 @@ risTransposer genome params who =
 {-|
    Gene transposition helper
 -}
-geneTransposer :: (RandomGen s) => Genome ->
-                                   Individual ->
-                                   Rmonad s [Symbol]
+geneTransposer :: Genome ->
+                  Individual ->
+                  GEPMonad [Symbol]
 geneTransposer genome who =
   do whichGene <- nextR (numGenes genome)
      return $ transposeGene who genome whichGene
@@ -63,9 +62,9 @@ geneTransposer genome who =
   and selects the crossover point before generating the new pair of
   resulting individuals after crossover.
 -}
-x1PHelper :: (RandomGen s) => Genome ->
-                              (Individual,Individual) ->
-                              Rmonad s (Individual,Individual)
+x1PHelper :: Genome ->
+             (Individual,Individual) ->
+             GEPMonad (Individual,Individual)
 x1PHelper g pair =
   do xoverPos <- nextR (geneLength g)
      return $ crossover1pt pair xoverPos
@@ -75,9 +74,9 @@ x1PHelper g pair =
   and selects the crossover points before generating the new pair of
   resulting individuals after crossover.
 -}
-x2PHelper :: (RandomGen s) => Genome ->
-                              (Individual,Individual) ->
-                              Rmonad s (Individual,Individual)
+x2PHelper :: Genome ->
+             (Individual,Individual) ->
+             GEPMonad (Individual,Individual)
 x2PHelper g pair =
   do xoverPos1 <- nextR (geneLength g)
      xoverPos2 <- nextRDifferent (geneLength g) xoverPos1
@@ -88,9 +87,9 @@ x2PHelper g pair =
   selects the crossover gene before generating the new pair of
   individuals resulting after crossover.
 -}
-xGHelper :: (RandomGen s) => Genome ->
-                             (Individual, Individual) ->
-                             Rmonad s (Individual,Individual)
+xGHelper :: Genome ->
+            (Individual, Individual) ->
+            GEPMonad (Individual,Individual)
 xGHelper g pair | (numGenes g) == 1 = return pair
 xGHelper g pair | otherwise         = do
   xoverGene <- nextR (numGenes g)

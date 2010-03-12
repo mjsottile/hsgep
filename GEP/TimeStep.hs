@@ -47,7 +47,6 @@ import GEP.Fitness
 import GEP.Types
 import GEP.Params
 import Debug.Trace
-import System.Random
 import List (sort)
 
 
@@ -66,8 +65,8 @@ import List (sort)
 --
 -- helper for type conversion
 --
-intToFloat :: Int -> Float
-intToFloat n = fromInteger (toInteger n)
+intToDouble :: Int -> Double
+intToDouble n = fromInteger (toInteger n)
 
 {-|
   Reassemble a population.  We are given a full population, the set
@@ -98,10 +97,10 @@ putTogether indices replacements original =
   in
     innerPutTogether 1 (length original) indices replacements original
 
-fillFilterGap :: (RandomGen s) => Genome -> 
-                                  Int -> 
-                                  [(Float,Individual)] ->
-                                  Rmonad s [(Float,Individual)]
+fillFilterGap :: Genome -> 
+                 Int -> 
+                [(Double,Individual)] ->
+                GEPMonad [(Double,Individual)]
 fillFilterGap genome popsize pop =
     if (popsize-(length pop)) > 0
     then do newIndividuals <- newPopulation genome (popsize-(length pop))
@@ -112,16 +111,15 @@ fillFilterGap genome popsize pop =
 {-| 
  Single step of GEP algorithm
 -}
-singleStep :: (RandomGen s) 
-           => [Individual]       -- ^ List of individuals 
+singleStep :: [Individual]       -- ^ List of individuals 
            -> Genome             -- ^ Genome
            -> SimParams          -- ^ Simulation parameters
            -> Rates              -- ^ Gene operator rates
            -> (Individual -> Genome -> a) -- ^ Expression function
-           -> (a -> b -> Float -> Float -> Float) -- ^ Fitness function
+           -> (a -> b -> Double -> Double -> Double) -- ^ Fitness function
            -> [b]                -- ^ Fitness inputs
-           -> [Float]            -- ^ Fitness outputs
-           -> Rmonad s (Float,[Individual])
+           -> [Double]            -- ^ Fitness outputs
+           -> GEPMonad (Double,[Individual])
 singleStep pop g params r express_individual fitness_evaluate 
            testInputs testOutputs =
     do indices <- roulette weights nSelect
@@ -193,7 +191,7 @@ singleStep pop g params r express_individual fitness_evaluate
     where
       nPop = length pop
       nSelect = nPop - 1
-      fnSelect = intToFloat nSelect
+      fnSelect = intToDouble nSelect
       pISCount = floor (fnSelect * (pIS r))
       pRISCount = floor (fnSelect * (pRIS r))
       pGTCount = floor (fnSelect * (pGT r))
@@ -210,26 +208,25 @@ singleStep pop g params r express_individual fitness_evaluate
       avgFitness = foldr (\(x,_) -> 
                           \a     -> a + 
                                     (x / 
-                                     (intToFloat (length initialFiltering))))
+                                     (intToDouble (length initialFiltering))))
                          0.0 initialFiltering
       best = getBest initialFiltering
       Just (bestFitness,bestIndividual) = best
       weights = generate_roulette_weights 
-                (intToFloat (length initialFiltering)) 
+                (intToDouble (length initialFiltering)) 
                 (rouletteExponent params)
 
-multiStep :: (RandomGen s) 
-          => [Individual]        -- ^ List of individuals
+multiStep :: [Individual]        -- ^ List of individuals
           -> Genome              -- ^ Genome
           -> SimParams           -- ^ Simulation parameters
           -> Rates               -- ^ Gene operator rates
           -> (Individual -> Genome -> a)   -- ^ Expression function
-          -> (a -> b -> Float -> Float -> Float) -- ^ Fitness function
+          -> (a -> b -> Double -> Double -> Double) -- ^ Fitness function
           -> [b]                 -- ^ Fitness inputs
-          -> [Float]             -- ^ Fitness outputs
+          -> [Double]             -- ^ Fitness outputs
           -> Int                 -- ^ Maximum number of generations to test
-          -> Float               -- ^ Ideal fitness
-          -> Rmonad s (Float,[Individual])
+          -> Double               -- ^ Ideal fitness
+          -> GEPMonad (Double,[Individual])
 multiStep pop g params r expresser fitnesser tests outs 0 _ =
     do (bf,newp) <- singleStep pop g params r expresser fitnesser tests outs
        return (bf,newp)

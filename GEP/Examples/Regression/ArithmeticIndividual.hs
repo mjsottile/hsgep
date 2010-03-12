@@ -89,7 +89,7 @@ aiToGraphviz n = ss
   where
     (ss,_) = arithToGraphviz n 0 False
 
-type AISymTable = SymTable Float
+type AISymTable = SymTable Double
 
 {-|
   Return the arity of a character representing a terminal or nonterminal.
@@ -174,7 +174,7 @@ connect_genes g x | otherwise     = connect_genes g (xh':ys)
     ys = tail xs
     xh' = GeneConnector (express c [xh,y])
 
-lookup_sym :: Char -> AISymTable -> Maybe Float
+lookup_sym :: Char -> AISymTable -> Maybe Double
 lookup_sym _ []             = Nothing
 lookup_sym '1' _            = Just 1.0
 lookup_sym sym ((c,x):syms) =
@@ -184,7 +184,7 @@ lookup_sym sym ((c,x):syms) =
     else 
         (lookup_sym sym syms)
 
-evaluate :: AINode -> AISymTable -> Float
+evaluate :: AINode -> AISymTable -> Double
 evaluate node syms =
     case node of
       (GeneConnector g) -> evaluate g syms
@@ -201,17 +201,17 @@ evaluate node syms =
       (UnOp Sqrt a) -> sqrt(evaluate a syms)
       (Terminal x) -> fromJust (lookup_sym x syms)
 
-evaluate_nodes :: [AINode] -> AISymTable -> [Float]
+evaluate_nodes :: [AINode] -> AISymTable -> [Double]
 evaluate_nodes nodes syms =
     map (\x -> evaluate x syms) nodes
 
-fitness_evaluate_absolute :: AINode -> AISymTable -> Float -> Float -> Float
+fitness_evaluate_absolute :: AINode -> AISymTable -> Double -> Double -> Double
 fitness_evaluate_absolute node syms target selection_range =
     selection_range - (abs (c - target))
     where
         c = evaluate node syms
 
-fitness_evaluate_relative :: AINode -> AISymTable -> Float -> Float -> Float
+fitness_evaluate_relative :: AINode -> AISymTable -> Double -> Double -> Double
 fitness_evaluate_relative node syms target selection_range =
     selection_range - (abs ( ( (c - target) / target ) * 100.0 ) )
     where
