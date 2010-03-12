@@ -14,7 +14,7 @@ Build-Type:    Simple
 Description:   GEP Description Goes Here
 
 Library
-  Build-Depends:      base, random, mtl, parsec==2.*, network, haskell98
+  Build-Depends:      base, random, mtl, parsec==2.*, network, haskell98, mersenne-random-pure64
   Exposed-modules:
     GEP.Fitness,  GEP.GeneOperations, GEP.MonadicGeneOperations,
     GEP.Params,   GEP.Random,         GEP.Rmonad,

@@ -3,7 +3,10 @@ TODO
 
 can maxfitness parameter be computed based on input size of test data set?
 
-move to cabal
+X move to cabal
+
+  (note: figure out -- why do I need to configure with --user when mersenne
+   package is installed by cabal in my home directory???)
 
 make generic driver that can be used by specific applications to build the
 main for the program.
