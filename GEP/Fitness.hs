@@ -34,12 +34,12 @@ pairSort ((f,i):rest) =
 --  and use a more general approach like evaluateFitness above.
 -- 
 fitness_tester :: a               -- ^ Expressed individual
-               -> (a -> b -> Float -> Float -> Float) -- ^ Fitness function
+               -> (a -> b -> Double -> Double -> Double) -- ^ Fitness function
                -> [b]             -- ^ List of symbol tables for test cases
-               -> [Float]         -- ^ List of expected outputs for test cases
-               -> Float           -- ^ Range of selection.  M in original
+               -> [Double]         -- ^ List of expected outputs for test cases
+               -> Double           -- ^ Range of selection.  M in original
                                   --   GEP paper equations for fitness.
-               -> Float           -- ^ Fitness value for given individual
+               -> Double           -- ^ Fitness value for given individual
 fitness_tester who ffun inputDict outputs m = 
   foldr (+) 0.0 tests
   where 
@@ -52,9 +52,9 @@ fitness_tester who ffun inputDict outputs m =
 --  only those individuals that have a valid fitness value.  This means those
 --  that are +/- infinity or NaN are removed.
 --
-fitness_filter :: [Float]              -- ^ Fitness values
+fitness_filter :: [Double]              -- ^ Fitness values
                -> [Individual]         -- ^ Individuals
-               -> [(Float,Individual)] -- ^ Paired fitness/individuals after 
+               -> [(Double,Individual)] -- ^ Paired fitness/individuals after 
                                        --   filtering
 fitness_filter fitnesses pop =
     foldr (\(i,j) -> 
@@ -66,5 +66,5 @@ fitness_filter fitnesses pop =
 -- |
 --  Sort a set of individuals with fitness values by their fitness
 --
-sortByFitness :: [(Float,Individual)] -> [(Float,Individual)]
+sortByFitness :: [(Double,Individual)] -> [(Double,Individual)]
 sortByFitness xs = reverse (pairSort xs)
