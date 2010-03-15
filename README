@@ -48,12 +48,55 @@ for using GEP, originally in Java.  The move to a functional language
 3.0: Usage
 ----------
 
-TODO
+At this point, the best places to look for documentation on using the
+library is:
+
+- The Haddock documentation.
+- Looking at examples.
+
+The most mature example currently included in the released code is the
+regression example.  In this example, a set of data points are provided
+and the optimization phase seeks to evolve a polynomial composed of
+basic arithmetic (+-*/), sqrt, and exponentiation operations that best fits
+the data points.  The example provided is fairly simplistic, and fails to
+include useful things like the ability to evolve constants as part of the
+polynomials.  In any case, it is sufficient to demonstrate the library.
+
+To run a regression example, you can use example input parameter and data
+files from the Examples/Regression directory.  For example, after building
+the code, you can run the example "test1" as:
+
+./dist/build/HSGEP_Regression/HSGEP_Regression ./Examples/Regression/test1.in ./Examples/Regression/test1.csv
+
+The current code will then evolve a solution that maximizes the fitness
+function (goodness of fit to the given data points), and will print it out.
+The example will also attempt to connect to a machine running a Maxima
+server to perform polynomial simplification to turn the long string of
+basic arithmetic operators into a more useful polynomial.  This is likely
+going to not work for most people, so either ignore the error, or tweak
+the code to either disable it or run the Maxima server code somewhere.
 
 4.0: FAQ
 --------
 
-TODO.  Ask a question!
+- Q: Is this library intended to be more than a toy?
+  A: Yes.  It has been a testbed for me to get used to some of the
+     details related to releasing a properly packaged library to
+     the world on Hackage, so some of the core has been neglected while I
+     did things related to build, organization, and documentation.
 
+- Q: What are the plans for near-term new versions?
+  A: Lots.
 
-
+     - If a plotting library is available (e.g.: Chart), produce plots of
+       fitness over time.
+     - Add more examples, such as the CA Density classification task.
+     - Performance improvements.
+     - Go parallel -- there are many opportunities for parallelism during
+       the run of the algorithm, so it would be worth taking advantage of
+       them.
+     - Abstract out some of the patterns currently residing in each example,
+       such as the process of expressing indiduals as structures.  The
+       ultimate goal is to make the end-user code that uses the library as
+       simple as possible, so absorbing as much of this into the core of the
+       library will be a good step in that direction.
