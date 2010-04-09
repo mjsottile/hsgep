@@ -16,12 +16,12 @@ genomeGeneConnector = +
 maxISLen  = 4
 maxRISLen = 4
 
-populationSize = 30
+populationSize = 180
 
 rouletteExponent = 1.25
 
 maxFitness = 20000.0
 
-numGenerations = 100
+numGenerations = 200
 
 selectionRange = 1000.0
