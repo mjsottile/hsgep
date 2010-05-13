@@ -1,5 +1,12 @@
+--
+-- fitness tester for CA density classification task
+--
+-- matt\@galois.com
+--
 module GEP.Examples.CADensity.CAFitness(
   CA1D(..),
+  CA7Rule,
+  CA7Neighborhood,
   nsteps,
   agreement
 ) where
@@ -13,7 +20,9 @@ data CA1D = CA1D (U.Vector Bool)
 idx :: Int -> Int -> Int
 idx i w = i `mod` w
 
-type CA7Rule = (Bool,Bool,Bool,Bool,Bool,Bool,Bool) -> Bool
+type CA7Neighborhood = (Bool,Bool,Bool,Bool,Bool,Bool,Bool)
+
+type CA7Rule = CA7Neighborhood -> Bool
 
 onestep :: CA7Rule -> CA1D -> CA1D
 onestep rule (CA1D state) = CA1D $ U.imap (\i _ -> site i) state
