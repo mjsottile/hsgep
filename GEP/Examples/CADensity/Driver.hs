@@ -1,5 +1,5 @@
 -- |
---  Haskell gene expression programming, regression example
+--  Haskell gene expression programming, density classification example
 -- 
 --  Author: mjsottile\@computer.org
 --
@@ -10,9 +10,8 @@ module Main (
 import GEP.Params
 import GEP.GenericDriver
 import GEP.Util.ConfigurationReader
-import GEP.Examples.Regression.ArithmeticIndividual
-import GEP.Examples.Regression.FitnessInput
-import GEP.Examples.Regression.MaximaClient
+import GEP.Examples.CADensity.CADensityIndividual
+import GEP.Examples.CADensity.CAFitness
 import System.Environment (getArgs)
 import System.Exit
 
@@ -25,8 +24,6 @@ validateArgs s = do
                              exitFailure
                      else do return ()
 
---
--- main
 --
 main :: IO ()
 main = do
