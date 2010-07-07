@@ -186,6 +186,10 @@ singleStep pop g params r express_individual fitness_evaluate
        xGPopOutFlat <- return $ foldr (\(a,b) -> \i -> (a:b:i)) [] xGPopOut
        xGPop <- return $ putTogether (sort xGUnpairPop) xGPopOutFlat x2ptPop
 
+       (bestFitness, bestIndividual) <- case best of
+            Just (f, i) -> return (f, i)
+            Nothing     -> do newI <- newIndividual g (numGenes g)
+                              return (0.0, newI)
 --       return $ (trace (bestIndividual++" => "++(show bestFitness)++"  AVG="++(show avgFitness)) (bestFitness,[bestIndividual]++x2ptPop))
        return $ (trace ((show bestFitness)++" "++(show avgFitness)) (bestFitness,[bestIndividual]++xGPop))
     where
@@ -211,7 +215,6 @@ singleStep pop g params r express_individual fitness_evaluate
                                      (intToDouble (length initialFiltering))))
                          0.0 initialFiltering
       best = getBest initialFiltering
-      Just (bestFitness,bestIndividual) = best
       weights = generate_roulette_weights 
                 (intToDouble (length initialFiltering)) 
                 (rouletteExponent params)
