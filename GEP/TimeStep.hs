@@ -187,10 +187,10 @@ singleStep :: [Individual]       -- ^ List of individuals
            -> Genome             -- ^ Genome
            -> SimParams          -- ^ Simulation parameters
            -> Rates              -- ^ Gene operator rates
-           -> (Individual -> Genome -> a) -- ^ Expression function
-           -> (a -> b -> Double -> Double -> Double) -- ^ Fitness function
-           -> [b]                -- ^ Fitness inputs
-           -> [Double]            -- ^ Fitness outputs
+           -> ExpressionFunction a -- ^ Expression function
+           -> FitnessFunction a b-- ^ Fitness function
+           -> TestDict b                -- ^ Fitness inputs
+           -> TestOuts            -- ^ Fitness outputs
            -> GEPMonad (Double,[Individual])
 singleStep pop g params r express_individual fitness_evaluate 
            testInputs testOutputs =
@@ -233,10 +233,10 @@ multiStep :: [Individual]        -- ^ List of individuals
           -> Genome              -- ^ Genome
           -> SimParams           -- ^ Simulation parameters
           -> Rates               -- ^ Gene operator rates
-          -> (Individual -> Genome -> a)   -- ^ Expression function
-          -> (a -> b -> Double -> Double -> Double) -- ^ Fitness function
-          -> [b]                 -- ^ Fitness inputs
-          -> [Double]             -- ^ Fitness outputs
+          -> ExpressionFunction a -- ^ Expression function
+          -> FitnessFunction a b -- ^ Fitness function
+          -> TestDict b                 -- ^ Fitness inputs
+          -> TestOuts             -- ^ Fitness outputs
           -> Int                 -- ^ Maximum number of generations to test
           -> Double               -- ^ Ideal fitness
           -> GEPMonad (Double,[Individual])

@@ -6,21 +6,7 @@ import GEP.Rmonad
 import GEP.Random
 import GEP.Types
 import GEP.Params
-
--- | Fitness function type
-type FitnessFunction a b = a -> b -> Double -> Double -> Double
-
--- | Function to express an individual into a list of ET structures
-type ExpressionFunction a = Individual -> Genome -> a
-
--- | A test case maps a list of terminals to float values
-type TestCase a = SymTable a
-    
--- | A test dictionary is a set of test cases
-type TestDict a = [TestCase a]
-
--- | The set of outputs expected for each entry in the test dictionary
-type TestOuts = [Double]
+import GEP.Fitness
 
 {-|
   Generic driver to be called from specific GEP program instances in their
@@ -31,7 +17,7 @@ gepDriver :: SimParams  -- ^ Simulation parameters
           -> Genome     -- ^ Genome that individuals are drawn from
           -> TestDict b -- ^ Test dictionary for fitness testing
           -> TestOuts   -- ^ Expected test results for test dictionary
-          -> FitnessFunction a (TestCase b) -- ^ Fitness testing function
+          -> FitnessFunction a b -- ^ Fitness testing function
           -> ExpressionFunction a        -- ^ String to ET expression function
           -> IO (Double,[String])         -- ^ Return best individual fitness and population
 gepDriver params rs gnome testdict testouts fitness_evaluate expression_function = do

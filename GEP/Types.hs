@@ -11,6 +11,7 @@ module GEP.Types (
     Chromosome,
     Individual,
     SymTable,
+    ExpressionFunction,
 
     -- * Functions
     tailLength,
@@ -41,6 +42,9 @@ type Individual = Chromosome
 --   default values).  If a symbol occurs multiple times in the symbol
 --   table, no guarantee is provided for which value will be chosen.
 type SymTable a = [(Symbol,a)]
+
+-- | Function to express an individual into a list of ET structures
+type ExpressionFunction a = Individual -> Genome -> a
 
 -- | Data type representing a genome.  The genome contains all necessary
 --   parameters to interpret a chromosome.  These include the alphabet (split

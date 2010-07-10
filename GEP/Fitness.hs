@@ -9,13 +9,28 @@
 --
 --   mjsottile\@computer.org
 --
-module GEP.Fitness (
-  fitness_tester,
-  fitness_filter,
-  sortByFitness
-) where
+module GEP.Fitness
+    ( FitnessFunction
+    , TestCase
+    , TestDict
+    , TestOuts
+    , fitness_tester
+    , fitness_filter
+    , sortByFitness
+    ) where
 
 import GEP.Types
+-- | Fitness function type
+type FitnessFunction a b = a -> TestCase b -> Double -> Double -> Double
+
+-- | A test case maps a list of terminals to float values
+type TestCase a = SymTable a
+
+-- | A test dictionary is a set of test cases
+type TestDict a = [TestCase a]
+
+-- | The set of outputs expected for each entry in the test dictionary
+type TestOuts = [Double]
 
 --
 -- Sort a list of pairs by first element of each pair.  Disregard duplicates
@@ -34,9 +49,9 @@ pairSort ((f,i):rest) =
 --  and use a more general approach like evaluateFitness above.
 -- 
 fitness_tester :: a               -- ^ Expressed individual
-               -> (a -> b -> Double -> Double -> Double) -- ^ Fitness function
-               -> [b]             -- ^ List of symbol tables for test cases
-               -> [Double]         -- ^ List of expected outputs for test cases
+               -> FitnessFunction a b -- ^ Fitness function
+               -> TestDict b             -- ^ List of symbol tables for test cases
+               -> TestOuts         -- ^ List of expected outputs for test cases
                -> Double           -- ^ Range of selection.  M in original
                                   --   GEP paper equations for fitness.
                -> Double           -- ^ Fitness value for given individual
