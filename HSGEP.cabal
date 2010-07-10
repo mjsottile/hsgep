@@ -27,5 +27,6 @@ Executable HSGEP_Regression
   Main-Is:         GEP/Examples/Regression/Driver.hs
 
 Executable HSGEP_CADensity
+  Build-Depends:   vector
   Main-Is:         GEP/Examples/CADensity/Driver.hs
 
