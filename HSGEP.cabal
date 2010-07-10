@@ -16,7 +16,7 @@ Description:   Gene Expression Programming evolutionary algorithm implemented
 Extra-Source-Files: Examples/Regression/*.in Examples/Regression/*.csv README README_Params.txt
 
 Library
-  Build-Depends:      base>=4&&<5, random, mtl, parsec>=2&&<3, network, haskell98, mersenne-random-pure64
+  Build-Depends:      base>=4&&<5, mtl, parsec>=2&&<3, haskell98, mersenne-random-pure64
   Exposed-modules:
     GEP.Fitness,  GEP.GeneOperations, GEP.MonadicGeneOperations,
     GEP.Params,   GEP.Random,         GEP.Rmonad,
@@ -24,6 +24,7 @@ Library
     GEP.Types,    GEP.GenericDriver
 
 Executable HSGEP_Regression
+  Build-Depends:   network
   Main-Is:         GEP/Examples/Regression/Driver.hs
 
 Executable HSGEP_CADensity
