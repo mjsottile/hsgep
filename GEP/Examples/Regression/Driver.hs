@@ -13,16 +13,15 @@ import GEP.Examples.Regression.ArithmeticIndividual
 import GEP.Examples.Regression.FitnessInput
 import GEP.Examples.Regression.MaximaClient
 import System.Environment (getArgs)
-import System.Exit
+import Control.Monad (when)
 
 --
 -- sanity check arguments to see if we have enough
 --
 validateArgs :: [String] -> IO ()
-validateArgs s = do 
-  if (length s < 2)  then do putStrLn "Must specify config file and fitness test data file names."
-                             exitFailure
-                     else do return ()
+validateArgs s =
+    when (length s < 2) $
+        error "Must specify config file and fitness test data file names."
 
 --
 -- main
@@ -36,11 +35,11 @@ main = do
   validateArgs args
 
   -- give args nice names
-  configFile <- return $ head args
-  fitnessFile <- return $ head (tail args)
+  let configFile = head args
+  let fitnessFile = head (tail args)
 
   -- if optional third argument is present, assume it is dot file
-  dotfile <- if ((length args) == 3) then return $ Just $head (tail (tail args))
+  dotfile <- if length args == 3 then return $ Just $head (tail (tail args))
                                      else return $ Nothing
   
   -- read parameters
@@ -53,10 +52,10 @@ main = do
   (best,pop) <- gepDriver params rs gnome testDict ys fitness_evaluate_absolute express_individual
 
   -- Express best individual
-  bestExpressed <- return $ express_individual (head pop) gnome
+  let bestExpressed = express_individual (head pop) gnome
   
   -- Flatten best individual via infix walk
-  bestString <- return $ infixWalker bestExpressed
+  let bestString = infixWalker bestExpressed
 
   -- report status
   putStrLn "-------------------------------------------------"
