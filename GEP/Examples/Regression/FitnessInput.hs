@@ -48,7 +48,7 @@ dictify lbls values =
     (map (\j -> zip (init charLbls) j) (init floatValues),
      map last floatValues)
     where
-      charLbls = map head lbls
+      charLbls = map head lbls  -- First line contains Terminal chars.
       floatValues = map (\j -> map (\i -> (read i) :: Double) j) values
 
 -- function that takes a filename and returns a dictionary
