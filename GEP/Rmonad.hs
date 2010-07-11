@@ -21,7 +21,6 @@ module GEP.Rmonad (
 
 import System.Random.Mersenne.Pure64
 import Control.Monad.State.Strict
-import Debug.Trace
 
 newtype Rmonad s a = S (State s a)
     deriving (Monad)

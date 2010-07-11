@@ -16,7 +16,6 @@ module GEP.Random (
 import GEP.Types
 import GEP.Params
 import GEP.Rmonad
-import System.Random.Mersenne.Pure64
 
 {-|
   Select a random symbol from the provided list.
@@ -78,7 +77,7 @@ mutateSymbol _ _ s _ _ | otherwise =
   do return s 
 
 mutateGene :: Genome -> Rates -> [Symbol] -> GEPMonad [Symbol]
-mutateGene_ _ [] = do return []
+mutateGene _ _ [] = do return []
 mutateGene g r (s:ss) =
   do prob <- nextF 1.0
      news <- mutateSymbol g r s prob ((length ss) >= (tailLength g))

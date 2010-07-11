@@ -7,7 +7,6 @@ module Main (
     main
 ) where
 
-import GEP.Params
 import GEP.GenericDriver
 import GEP.Util.ConfigurationReader
 import GEP.Examples.Regression.ArithmeticIndividual
@@ -66,10 +65,8 @@ main = do
 
   putStrLn $ "MAXIMA OUTPUT :"
   -- send flattened individual to maxima for pretty printing
-  maxOut <- maximaExpand bestString "qubu.net" 12777
-
-  -- print lines that come back
-  mapM putStrLn maxOut
+  -- and print lines that come back
+  maximaExpand bestString "qubu.net" 12777 >>= mapM_ putStrLn
 
   -- dump to dot file if one was specified
   dumpDotFile dotfile bestExpressed

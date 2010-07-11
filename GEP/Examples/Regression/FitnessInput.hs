@@ -13,7 +13,6 @@ module GEP.Examples.Regression.FitnessInput (
 ) where
 
 import Text.ParserCombinators.Parsec
-import System.Exit
 
 --
 -- assume files have CSV format with a header row where each entry in the
@@ -25,20 +24,20 @@ import System.Exit
 
 --  PARSEC STUFF
 
+csvfile :: GenParser Char st [[[Char]]]
 csvfile = many csvline
 
-csvline = do
-  entries <- (sepBy entry (char ','))
-  newline
-  return entries
+csvline :: GenParser Char st [[Char]]
+csvline = sepBy entry (char ',') >>= \entries ->
+          newline >> return entries
 
 -- entry accepts any string containing alphanum or periods, with spaces either
 -- before or after the value.
-entry = do
-  many (char ' ')
-  body <- many (noneOf ",\n")
-  many (char ' ')
-  return body
+entry :: GenParser Char st [Char]
+entry = many (char ' ') >>
+        many (noneOf ",\n") >>= \body ->
+        many (char ' ') >>
+        return body
 
 --  END PARSEC STUFF
 
@@ -56,9 +55,9 @@ dictify lbls values =
 readFitnessInput :: String -> IO (FitnessDict,[Double])
 readFitnessInput fname = do
   result <- parseFromFile csvfile fname
-  case result of Left err -> do putStrLn "Bad regression fitness input!"
-                                exitFailure
-                 Right xs -> do return $ dictify (head xs) (tail xs)
+  case result of Left err -> error $ "Bad regression fitness input: "
+                                ++ show fname ++ "!\n" ++ show err
+                 Right xs -> return $ dictify (head xs) (tail xs)
 
 {-
 main :: IO ()

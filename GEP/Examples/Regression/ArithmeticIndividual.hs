@@ -39,7 +39,7 @@ dumpDotFile Nothing      _ = return ()
 dumpDotFile (Just fname) n = do
   fh <- openFile fname WriteMode
   hPutStrLn fh "digraph HSGEP_Regression {"
-  mapM (hPutStrLn fh) (aiToGraphviz n)
+  mapM_ (hPutStrLn fh) (aiToGraphviz n)
   hPutStrLn fh "}"
   hClose fh
 
@@ -164,7 +164,7 @@ express_individual chrom g =
     ets = map (\i -> head (assemble (levelize i 1))) genes
 
 connect_genes :: Genome -> [AINode] -> AINode
-connect_genes g x | length x == 1 = head x
+connect_genes _ x | length x == 1 = head x
 connect_genes g x | otherwise     = connect_genes g (xh':ys)
   where
     c = geneConnector g
