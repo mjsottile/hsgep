@@ -6,10 +6,8 @@
 -}
 module GEP.Examples.Regression.ArithmeticIndividual(
     express_individual,
-    evaluate,
     fitness_evaluate_absolute,
     fitness_evaluate_relative,
-    evaluate_nodes,
     infixWalker,
     aiToGraphviz,
     dumpDotFile
@@ -200,10 +198,6 @@ evaluate node syms =
               Exp -> ea ** eb
       (UnOp Sqrt a) -> sqrt(evaluate a syms)
       (Terminal x) -> fromJust (lookup_sym x syms)
-
-evaluate_nodes :: [AINode] -> AISymTable -> [Double]
-evaluate_nodes nodes syms =
-    map (\x -> evaluate x syms) nodes
 
 fitness_evaluate_absolute :: AINode -> AISymTable -> Double -> Double -> Double
 fitness_evaluate_absolute node syms target selection_range =
