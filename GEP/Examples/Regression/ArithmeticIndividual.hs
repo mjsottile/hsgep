@@ -16,8 +16,8 @@ module GEP.Examples.Regression.ArithmeticIndividual(
 ) where
 
 import GEP.Types
-import Maybe
-import IO
+import Data.Maybe
+import System.IO
 
 data BinOperator = Plus | Minus | Divide | Times | Exp
                    deriving Show
@@ -49,8 +49,8 @@ arithToGraphviz (Terminal c) i _ =
     (["  "++ident++" [label=\""++lbl++"\"];"], i')
   where
     i' = i+1
-    ident = "l"++(show i')
-    lbl = (show c)
+    ident = 'l' : show i'
+    lbl = show c
 
 arithToGraphviz (UnOp Sqrt kidNodes) i isGC =
     (["  "++ident++" [label=\""++lbl++"\""++special++"];",
@@ -59,8 +59,8 @@ arithToGraphviz (UnOp Sqrt kidNodes) i isGC =
     special = if isGC then ", color=red" else ""
     i' = i+1
     (kids,kidID) = arithToGraphviz kidNodes i' False
-    ident = "l"++(show i')
-    kidIdent = "l"++(show (i'+1))
+    ident = 'l' : show i'
+    kidIdent = 'l' : show (i'+1)
     lbl = "Q"
 
 arithToGraphviz (BinOp bop lKids rKids) i isGC =
@@ -70,10 +70,10 @@ arithToGraphviz (BinOp bop lKids rKids) i isGC =
   where
     special = if isGC then ", color=red" else ""
     i' = i+1
-    ident = "l"++(show i')
-    lkidIdent = "l"++(show (i'+1))
+    ident = 'l' : show i'
+    lkidIdent = 'l' : show (i'+1)
     (lkidlist,lkidID) = arithToGraphviz lKids i' False
-    rkidIdent = "l"++(show (lkidID+1))
+    rkidIdent = 'l' : show (lkidID+1)
     (rkidlist,rkidID) = arithToGraphviz rKids lkidID False
     ops = case bop of
             Minus  -> "-"
@@ -110,13 +110,13 @@ levelize :: [Char] -> Int -> [[Char]]
 levelize _  0 = []
 levelize [] _ = []
 levelize s  i =
-    [front]++(levelize back (foldr (+) 0 (map arity front)))
+    front : levelize back (foldr ((+) . arity) 0 front)
     where
       (front,back) = splitAt i s
 
 infixWalker :: AINode -> String
 infixWalker (Terminal c) = [c]
-infixWalker (UnOp Sqrt e) = "sqrt("++(infixWalker e)++")"
+infixWalker (UnOp Sqrt e) = "sqrt("++ infixWalker e ++")"
 infixWalker (GeneConnector g) = infixWalker g
 infixWalker (BinOp op a b) = "("++as++ops++bs++")"
   where
@@ -146,14 +146,14 @@ express c kids =
 lvlAssemble :: [Char] -> [AINode] -> [AINode]
 lvlAssemble [] _        = []
 lvlAssemble (c:cs) kids = 
-    [express c cneed]++(lvlAssemble cs csneed)
+    express c cneed : lvlAssemble cs csneed
     where
       ac = arity c
       (cneed,csneed) = splitAt ac kids
 
 assemble :: [[Char]] -> [AINode]
 assemble []     = []
-assemble (c:[]) = (map (\x -> Terminal x) c)
+assemble (c:[]) = map (\x -> Terminal x) c
 assemble (c:cs) = lvlAssemble c (assemble cs)
 
 express_individual :: Individual -> Genome -> AINode
@@ -207,12 +207,12 @@ evaluate_nodes nodes syms =
 
 fitness_evaluate_absolute :: AINode -> AISymTable -> Double -> Double -> Double
 fitness_evaluate_absolute node syms target selection_range =
-    selection_range - (abs (c - target))
+    selection_range - abs (c - target)
     where
         c = evaluate node syms
 
 fitness_evaluate_relative :: AINode -> AISymTable -> Double -> Double -> Double
 fitness_evaluate_relative node syms target selection_range =
-    selection_range - (abs ( ( (c - target) / target ) * 100.0 ) )
+    selection_range - abs ( ( (c - target) / target ) * 100.0 )
     where
         c = evaluate node syms
