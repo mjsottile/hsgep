@@ -85,13 +85,12 @@ crossoverGene (x,y) gene geneLen = (x',y')
 
 --
 -- Find a root insertion sequence within a sequence.  This means looking
--- for the first subsequence that starts with a nonterminal.  If no such
--- subsequence exists, return the empty list.
+-- for the first subsequence that starts with a nonterminal. If no such
+-- subsequence exists, return an empty list.
 --
-findRIS :: [Symbol] -> Genome -> [Symbol]
-findRIS [] _                           = []
-findRIS (x:xs) g | (isNonterminal x g) = (x:xs)
-findRIS (_:xs) g | otherwise           = findRIS xs g
+findRIS :: Genome -> [Symbol] -> [Symbol]
+findRIS g = dropWhile isT
+    where isT x = not $ isNonterminal x g
 
 -- |
 --  Root insertion sequence transposition.
@@ -115,7 +114,7 @@ transposeRIS x genome gene pos len =
     -- find the root insertion sequence within the candidate region given
     -- by the search start position
     risCandidateRegion = drop pos theGene
-    risSeq = take len (findRIS risCandidateRegion genome)
+    risSeq = take len (findRIS genome risCandidateRegion)
 
     -- determine how much of the head to preserve based on the length of
     -- the root insertion sequence
