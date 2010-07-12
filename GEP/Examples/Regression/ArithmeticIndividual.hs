@@ -197,7 +197,9 @@ evaluate node syms =
               Divide -> ea / eb
               Exp -> ea ** eb
       (UnOp Sqrt a) -> sqrt(evaluate a syms)
-      (Terminal x) -> fromJust (lookup_sym x syms)
+      (Terminal x) -> fromMaybe
+                        (error $ "Invalid terminal symbol" ++ show x ++ "appeared.")
+                        (lookup_sym x syms)
 
 fitness_evaluate_absolute :: AINode -> AISymTable -> Double -> Double -> Double
 fitness_evaluate_absolute node syms target selection_range =
