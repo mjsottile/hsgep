@@ -24,13 +24,17 @@ import Text.CSV
 
 type FitnessDict = [[(Char,Double)]]
 
-dictify :: [String] -> [[String]] -> (FitnessDict, [Double])
+dictify :: Record -> [Record] -> (FitnessDict, [Double])
 dictify lbls values =
     (map (\j -> zip (init charLbls) j) (init floatValues),
      map last floatValues)
     where
       charLbls = map head lbls  -- First line contains Terminal chars.
-      floatValues = map (\j -> map (\i -> (read i) :: Double) j) values
+      floatValues = map toDoubles (filter emptyRecord values)
+      emptyRecord :: [Field] -> Bool
+      emptyRecord r = 0 < (length . concat) r
+      toDoubles :: Record -> [Double]
+      toDoubles = map read
 
 -- function that takes a filename and returns a dictionary
 readFitnessInput :: String -> IO (FitnessDict,[Double])
