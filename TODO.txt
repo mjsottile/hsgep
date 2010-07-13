@@ -1,6 +1,13 @@
 TODO
 ----
 
+When reading floating point values from csv file (Prelude.read "1." :: Double)
+returns "no parse". Not sure about whether "1." forms a valid string for a
+floating point number, but this should be corrected anyway. E.g. Mathematica
+string of N[1] is "1.".
+Until then try "sed -i 's%\.\([^0-9]\|$\)%.0\1%g'"
+
+
 can maxfitness parameter be computed based on input size of test data set?
 
 X move to cabal
