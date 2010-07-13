@@ -19,7 +19,7 @@ Library
     GHC-Options: -Wall
     GHC-Prof-Options: -Wall -auto-all -caf-all
 
-  Build-Depends:      base>=4&&<5, mtl, parsec>=2&&<3, haskell98, mersenne-random-pure64, vector
+  Build-Depends:      base>=4&&<5, mtl, haskell98, mersenne-random-pure64, vector
   Exposed-modules:
     GEP.Fitness,  GEP.GeneOperations, GEP.MonadicGeneOperations,
     GEP.Params,   GEP.Random,         GEP.Rmonad,
@@ -30,7 +30,7 @@ Executable HSGEP_Regression
     GHC-Options: -Wall
     GHC-Prof-Options: -Wall -auto-all -caf-all
 
-  Build-Depends:   network
+  Build-Depends:   network, csv
   Main-Is:         GEP/Examples/Regression/Driver.hs
 
 Executable HSGEP_CADensity
