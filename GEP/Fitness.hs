@@ -68,8 +68,8 @@ fitness_tester who ffun inputDict outputs m =
 --  that are +/- infinity or NaN are removed.
 --
 fitness_filter :: [Double]              -- ^ Fitness values
-               -> [Individual]         -- ^ Individuals
-               -> [(Double,Individual)] -- ^ Paired fitness/individuals after 
+               -> [Chromosome]         -- ^ Individuals
+               -> [(Double, Chromosome)] -- ^ Paired fitness/individuals after 
                                        --   filtering
 fitness_filter fitnesses pop =
     foldr (\(i,j) -> 
@@ -81,5 +81,5 @@ fitness_filter fitnesses pop =
 -- |
 --  Sort a set of individuals with fitness values by their fitness
 --
-sortByFitness :: [(Double,Individual)] -> [(Double,Individual)]
+sortByFitness :: [(Double, Chromosome)] -> [(Double, Chromosome)]
 sortByFitness xs = reverse (pairSort xs)

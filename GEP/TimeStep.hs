@@ -76,9 +76,9 @@ intToDouble n = fromInteger (toInteger n)
   new versions.
 -}
 putTogether :: [Int]         -- ^ Indices of individuals to replace
-            -> [Individual]  -- ^ Replacement individuals
-            -> [Individual]  -- ^ Original population
-            -> [Individual]  -- ^ New population
+            -> [Chromosome]  -- ^ Replacement individuals
+            -> [Chromosome]  -- ^ Original population
+            -> [Chromosome]  -- ^ New population
 putTogether indices replacements original =
   let innerPutTogether cur _ [] [] qs = drop (cur-1) qs
       innerPutTogether cur _ [] _  qs = drop (cur-1) qs
@@ -99,8 +99,8 @@ putTogether indices replacements original =
 
 fillFilterGap :: Genome -> 
                  Int -> 
-                [(Double,Individual)] ->
-                GEPMonad [(Double,Individual)]
+                [(Double, Chromosome)] ->
+                GEPMonad [(Double, Chromosome)]
 fillFilterGap genome popsize pop =
     if (popsize-(length pop)) > 0
     then do newIndividuals <- newPopulation genome (popsize-(length pop))
@@ -111,8 +111,8 @@ fillFilterGap genome popsize pop =
 applyMutations :: Genome ->
                   SimParams ->
                   Rates ->
-                  [Individual] ->
-                  GEPMonad [Individual]
+                  [Chromosome] ->
+                  GEPMonad [Chromosome]
 applyMutations g params r s = do
     mutated <- mapM (mutate g r) s
 
@@ -181,7 +181,7 @@ applyMutations g params r s = do
 {-| 
  Single step of GEP algorithm
 -}
-singleStep :: [Individual]       -- ^ List of individuals 
+singleStep :: [Chromosome]       -- ^ List of individuals 
            -> Genome             -- ^ Genome
            -> SimParams          -- ^ Simulation parameters
            -> Rates              -- ^ Gene operator rates
@@ -189,7 +189,7 @@ singleStep :: [Individual]       -- ^ List of individuals
            -> FitnessFunction a b-- ^ Fitness function
            -> TestDict b                -- ^ Fitness inputs
            -> TestOuts            -- ^ Fitness outputs
-           -> GEPMonad (Double,[Individual])
+           -> GEPMonad (Double, [Chromosome])
 singleStep pop g params r express_individual fitness_evaluate 
            testInputs testOutputs =
     do indices <- roulette weights nSelect
@@ -227,7 +227,7 @@ singleStep pop g params r express_individual fitness_evaluate
                 (intToDouble (length initialFiltering)) 
                 (rouletteExponent params)
 
-multiStep :: [Individual]        -- ^ List of individuals
+multiStep :: [Chromosome]        -- ^ List of individuals
           -> Genome              -- ^ Genome
           -> SimParams           -- ^ Simulation parameters
           -> Rates               -- ^ Gene operator rates
@@ -237,7 +237,7 @@ multiStep :: [Individual]        -- ^ List of individuals
           -> TestOuts             -- ^ Fitness outputs
           -> Int                 -- ^ Maximum number of generations to test
           -> Double               -- ^ Ideal fitness
-          -> GEPMonad (Double,[Individual])
+          -> GEPMonad (Double, [Chromosome])
 multiStep pop g params r expresser fitnesser tests outs 0 _ =
     do (bf,newp) <- singleStep pop g params r expresser fitnesser tests outs
        return (bf,newp)

@@ -24,9 +24,9 @@ import GEP.Types
 
 -- | 
 --  One-point crossover
-crossover1pt :: ([Symbol], [Symbol]) -- ^ Pair of individuals before crossover
+crossover1pt :: (Chromosome, Chromosome) -- ^ Pair of individuals before crossover
              -> Int                  -- ^ Crossover point
-             -> ([Symbol],[Symbol])  -- ^ Pair of individuals after crossover
+             -> (Chromosome, Chromosome)  -- ^ Pair of individuals after crossover
 crossover1pt (x,y) loc = (x', y')
   where
     (fx, bx) = splitAt (loc-1) x
@@ -37,7 +37,7 @@ crossover1pt (x,y) loc = (x', y')
 --
 -- helper to split a list into three parts. 
 --
-splitThirds :: [a] -> Int -> Int -> ([a],[a],[a])
+splitThirds :: Sequence -> Int -> Int -> (Sequence, Sequence, Sequence)
 splitThirds x l1 l2 = (fx,mx,bx)
   where
     (fx,tmp) = splitAt l1 x
@@ -45,10 +45,10 @@ splitThirds x l1 l2 = (fx,mx,bx)
 
 -- |
 --  Two-point crossover
-crossover2pt :: ([Symbol], [Symbol]) -- ^ Pair of individuals before crossover
+crossover2pt :: (Chromosome, Chromosome) -- ^ Pair of individuals before crossover
              -> Int                  -- ^ Crossover point 1
              -> Int                  -- ^ Crossover point 2
-             -> ([Symbol],[Symbol])  -- ^ Pair of individuals after crossover
+             -> (Chromosome, Chromosome)  -- ^ Pair of individuals after crossover
 crossover2pt (x,y) loc1 loc2 = (x',y')
   where
     -- make sure we know which location is lower than the other
@@ -63,7 +63,7 @@ crossover2pt (x,y) loc1 loc2 = (x',y')
 -- Helper to extract a gene from a sequence and return the sequence
 -- before the gene, the gene itself, and the sequence after the gene.
 --
-geneExtract :: [Symbol] -> Int -> Int -> ([Symbol],[Symbol],[Symbol])
+geneExtract :: Chromosome -> Int -> Int -> (Sequence, Gene, Sequence)
 geneExtract x gene geneLen = (before, theGene, after)
   where
     geneStart = geneLen * gene
@@ -72,10 +72,10 @@ geneExtract x gene geneLen = (before, theGene, after)
 
 -- |
 --  Gene crossover
-crossoverGene :: ([Symbol], [Symbol]) -- ^ Pair of individuals before crossover
+crossoverGene :: (Sequence, Sequence) -- ^ Pair of individuals before crossover
               -> Int                  -- ^ Gene number for crossover
               -> Int                  -- ^ Gene length in symbols
-              -> ([Symbol], [Symbol]) -- ^ Pair of individuals after crossover
+              -> (Sequence, Sequence) -- ^ Pair of individuals after crossover
 crossoverGene (x,y) gene geneLen = (x',y')
   where
     (fx,mx,bx) = geneExtract x gene geneLen
@@ -88,19 +88,19 @@ crossoverGene (x,y) gene geneLen = (x',y')
 -- for the first subsequence that starts with a nonterminal. If no such
 -- subsequence exists, return an empty list.
 --
-findRIS :: Genome -> [Symbol] -> [Symbol]
+findRIS :: Genome -> Sequence -> Sequence
 findRIS g = dropWhile isT
     where isT x = not $ isNonterminal x g
 
 -- |
 --  Root insertion sequence transposition.
-transposeRIS :: [Symbol] -- ^ Sequence to perform RIS transposition on
+transposeRIS :: Sequence -- ^ Sequence to perform RIS transposition on
              -> Genome   -- ^ Genome information
              -> Int      -- ^ Gene to perform RIS transposition within
              -> Int      -- ^ Position within gene to start search for
                          --   RIS for transposition
              -> Int      -- ^ Length of RIS
-             -> [Symbol] -- ^ Sequence after RIS transposition performed
+             -> Sequence -- ^ Sequence after RIS transposition performed
 transposeRIS x genome gene pos len = 
     fx ++ risSeq ++ keepHead ++ geneTail ++ bx
   where
@@ -124,7 +124,7 @@ transposeRIS x genome gene pos len =
     -- are preserved after transposition
     keepHead    = take keepHeadlen geneHead
 
-insertIntoGene :: [Symbol] -> [Symbol] -> Int -> Int -> [Symbol]
+insertIntoGene :: Gene -> Sequence -> Int -> Int -> Gene
 insertIntoGene x ins hl pos = (take hl (pre++ins++post))++tX
   where
     hX = take hl x
@@ -134,13 +134,13 @@ insertIntoGene x ins hl pos = (take hl (pre++ins++post))++tX
 
 -- |
 --  Insertion sequence transposition.
-transposeIS :: [Symbol]  -- ^ Chromosome
+transposeIS :: Chromosome  -- ^ Chromosome
             -> Genome    -- ^ Genome
             -> Int       -- ^ Gene number
             -> Int       -- ^ Position to take from within a gene
             -> Int       -- ^ Length to take
             -> Int       -- ^ Position to put within a gene
-            -> [Symbol]  -- ^ Resulting chromosome
+            -> Chromosome  -- ^ Resulting chromosome
 transposeIS x genome genenum takepos len putpos = 
     genesBefore ++ gene' ++ genesAfter
   where
@@ -151,11 +151,11 @@ transposeIS x genome genenum takepos len putpos =
 
 -- |
 --  Gene transposition.
-transposeGene :: [Symbol] -- ^ Chromosome
+transposeGene :: Chromosome -- ^ Chromosome
               -> Genome   -- ^ Genome
               -> Int      -- ^ Gene number
-              -> [Symbol] -- ^ Resulting chromosome
-transposeGene x genome gnum = gene++pregene++postgene
+              -> Chromosome -- ^ Resulting chromosome
+transposeGene x genome gnum = concat [gene, pregene, postgene]
   where
     geneLen = (headLength genome) + (tailLength genome)
     gene = take geneLen (drop (geneLen * gnum) x)

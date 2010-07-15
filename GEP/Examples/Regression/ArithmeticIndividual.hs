@@ -104,7 +104,7 @@ arity '/' = 2
 arity '^' = 2
 arity _   = 0
 
-levelize :: [Char] -> Int -> [[Char]]
+levelize :: Sequence -> Int -> [Sequence]
 levelize _  0 = []
 levelize [] _ = []
 levelize s  i =
@@ -141,7 +141,7 @@ express c kids =
       lhs = head kids
       rhs = head (tail kids)
 
-lvlAssemble :: [Char] -> [AINode] -> [AINode]
+lvlAssemble :: Sequence -> [AINode] -> [AINode]
 lvlAssemble [] _        = []
 lvlAssemble (c:cs) kids = 
     express c cneed : lvlAssemble cs csneed
@@ -149,12 +149,12 @@ lvlAssemble (c:cs) kids =
       ac = arity c
       (cneed,csneed) = splitAt ac kids
 
-assemble :: [[Char]] -> [AINode]
+assemble :: [Sequence] -> [AINode]
 assemble []     = []
 assemble (c:[]) = map (\x -> Terminal x) c
 assemble (c:cs) = lvlAssemble c (assemble cs)
 
-express_individual :: Individual -> Genome -> AINode
+express_individual :: Chromosome -> Genome -> AINode
 express_individual chrom g = 
   connect_genes g ets
   where

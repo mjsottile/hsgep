@@ -19,7 +19,7 @@ gepDriver :: SimParams  -- ^ Simulation parameters
           -> TestOuts   -- ^ Expected test results for test dictionary
           -> FitnessFunction a b -- ^ Fitness testing function
           -> ExpressionFunction a        -- ^ String to ET expression function
-          -> IO (Double,[String])         -- ^ Return best individual fitness and population
+          -> IO (Double, [Chromosome])         -- ^ Return best individual fitness and population
 gepDriver params rs gnome testdict testouts fitness_evaluate expression_function = do
   -- create initial population
   (initialPopulation,rngState) <- return $ runRmonad 

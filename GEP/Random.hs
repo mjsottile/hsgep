@@ -42,7 +42,7 @@ randomSymbolList syms n =
 -- | Generate a new individual given a genome specification.
 newIndividual :: Genome              -- ^ Genome for individual
               -> Int                 -- ^ Number of genes to generate
-              -> GEPMonad Individual
+              -> GEPMonad Chromosome
 newIndividual _ 0 = do return []
 newIndividual g n =
   do hI <- randomSymbolList (allsymbols g) head_len
@@ -57,7 +57,7 @@ newIndividual g n =
 -- |specification.
 newPopulation :: Genome   -- ^ Genome of population
               -> Int      -- ^ Number of individuals to create
-              -> GEPMonad [Individual]
+              -> GEPMonad [Chromosome]
 newPopulation _ 0 = do return []
 newPopulation g n =
   do p <- newPopulation g (n-1)

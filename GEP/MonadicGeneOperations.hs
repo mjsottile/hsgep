@@ -25,8 +25,8 @@ import GEP.Params
 -}
 isTransposer :: Genome ->
                 SimParams ->
-                Individual ->
-                GEPMonad [Symbol]
+                Chromosome ->
+                GEPMonad Chromosome
 isTransposer genome params who =
   do takelen   <- nextR (maxISLen params)
      takepos   <- nextR ((geneLength genome)-takelen)
@@ -39,8 +39,8 @@ isTransposer genome params who =
 -}
 risTransposer :: Genome -> 
                  SimParams ->
-                 Individual ->
-                 GEPMonad [Symbol]
+                 Chromosome ->
+                 GEPMonad Chromosome
 risTransposer genome params who =
   do takelen <- nextR (maxRISLen params)
      takepos <- nextR ((headLength genome)-1)
@@ -51,8 +51,8 @@ risTransposer genome params who =
    Gene transposition helper
 -}
 geneTransposer :: Genome ->
-                  Individual ->
-                  GEPMonad [Symbol]
+                  Chromosome ->
+                  GEPMonad Chromosome
 geneTransposer genome who =
   do whichGene <- nextR (numGenes genome)
      return $ transposeGene who genome whichGene
@@ -63,8 +63,8 @@ geneTransposer genome who =
   resulting individuals after crossover.
 -}
 x1PHelper :: Genome ->
-             (Individual,Individual) ->
-             GEPMonad (Individual,Individual)
+             (Chromosome,Chromosome) ->
+             GEPMonad (Chromosome,Chromosome)
 x1PHelper g pair =
   do xoverPos <- nextR (geneLength g)
      return $ crossover1pt pair xoverPos
@@ -75,8 +75,8 @@ x1PHelper g pair =
   resulting individuals after crossover.
 -}
 x2PHelper :: Genome ->
-             (Individual,Individual) ->
-             GEPMonad (Individual,Individual)
+             (Chromosome,Chromosome) ->
+             GEPMonad (Chromosome,Chromosome)
 x2PHelper g pair =
   do xoverPos1 <- nextR (geneLength g)
      xoverPos2 <- nextRDifferent (geneLength g) xoverPos1
@@ -88,8 +88,8 @@ x2PHelper g pair =
   individuals resulting after crossover.
 -}
 xGHelper :: Genome ->
-            (Individual, Individual) ->
-            GEPMonad (Individual,Individual)
+            (Chromosome, Chromosome) ->
+            GEPMonad (Chromosome,Chromosome)
 xGHelper g pair | (numGenes g) == 1 = return pair
 xGHelper g pair | otherwise         = do
   xoverGene <- nextR (numGenes g)

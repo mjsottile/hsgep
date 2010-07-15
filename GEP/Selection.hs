@@ -34,8 +34,8 @@ import List (sort)
   We may return nothing if an empty set is passed in to begin with, so
   the return type is a Maybe pair.
 -}
-getBest :: [(Double,Individual)]      -- ^ Fitness/Individual pairs
-        -> Maybe (Double,Individual)  -- ^ Best pair, or Nothing if no such pair
+getBest :: [(Double, Chromosome)]      -- ^ Fitness/Individual pairs
+        -> Maybe (Double, Chromosome)  -- ^ Best pair, or Nothing if no such pair
 getBest []          = Nothing
 getBest individuals =
   let innerBest [] bi bf = Just (bf,bi)
