@@ -20,8 +20,8 @@ import GEP.Rmonad
 {-|
   Select a random symbol from the provided list.
 -}
-randomSymbol :: [Symbol]        -- ^ List of symbols
-             -> GEPMonad Symbol-- ^ Selected symbol
+randomSymbol :: [a]        -- ^ List of symbols
+             -> GEPMonad a -- ^ Selected symbol
 randomSymbol syms =
   do index <- nextR (length syms)
      return (syms !! (index-1))
@@ -29,9 +29,9 @@ randomSymbol syms =
 {-|
   Select a sequence of random symbols from the provided list.
 -}
-randomSymbolList :: [Symbol]          -- ^ List of symbols
+randomSymbolList :: [a]          -- ^ List of symbols
                  -> Int               -- ^ Number to select
-                 -> GEPMonad [Symbol] -- ^ List of selected 
+                 -> GEPMonad [a] -- ^ List of selected 
                                            --   symbols
 randomSymbolList _    0 = do return []
 randomSymbolList syms n =
