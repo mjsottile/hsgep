@@ -81,7 +81,7 @@ mutateGene _ _ [] = do return []
 mutateGene g r (s:ss) =
   do prob <- nextF 1.0
      news <- mutateSymbol g r s prob ((length ss) >= (tailLength g))
-     newss <- mutate g r ss
+     newss <- mutateGene g r ss
      return ([news]++newss)
 
 mutate :: Genome -> Rates -> [Symbol] -> GEPMonad [Symbol]
