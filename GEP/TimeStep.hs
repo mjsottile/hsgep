@@ -104,7 +104,7 @@ fillFilterGap :: Genome ->
 fillFilterGap genome popsize pop =
     if (popsize-(length pop)) > 0
     then do newIndividuals <- newPopulation genome (popsize-(length pop))
-            newPop <- return $ map (\i -> (0.0,i)) newIndividuals
+            let newPop = map (\i -> (0.0,i)) newIndividuals
             return $! pop++newPop
     else return $! pop
 
@@ -118,57 +118,54 @@ applyMutations g params r s = do
 
     -- IS transposition
     isTransposePop <- nextRListUnique pISCount [] nSelect
-    isPopIn <- return $ map (\i -> (!!!) mutated (i-1) "isPopIn")
-                           isTransposePop
+    let isPopIn = map (\i -> (!!!) mutated (i-1) "isPopIn") isTransposePop
     isPopOut <- mapM (isTransposer g params) isPopIn
-    isPop <- return $ putTogether (sort isTransposePop) isPopOut mutated
+    let isPop = putTogether (sort isTransposePop) isPopOut mutated
 
     -- RIS transposition
     risTransposePop <- nextRListUnique pRISCount [] nSelect
-    risPopIn <- return $ map (\i -> (!!!) isPop (i-1) "risPopIn")
-                            risTransposePop
+    let risPopIn = map (\i -> (!!!) isPop (i-1) "risPopIn") risTransposePop
     risPopOut <- mapM (risTransposer g params) risPopIn
-    risPop <- return $ putTogether (sort risTransposePop) risPopOut isPop
+    let risPop = putTogether (sort risTransposePop) risPopOut isPop
 
     -- Gene transposition
     geneTransposePop <- nextRListUnique pGTCount [] nSelect
-    genePopIn <- return $ map (\i -> (!!!) risPop (i-1) "genePopIn")
-                            geneTransposePop
+    let genePopIn = map (\i -> (!!!) risPop (i-1) "genePopIn") geneTransposePop
     genePopOut <- mapM (geneTransposer g) genePopIn
-    genePop <- return $ putTogether (sort geneTransposePop) genePopOut risPop
+    let genePop = putTogether (sort geneTransposePop) genePopOut risPop
 
     -- 1Pt crossover
     x1ptPopPairs <- generatePairs nSelect
-    x1ptPopSomePairs <- return $ take p1PCount x1ptPopPairs
-    x1UnpairPop <- return $ foldr (\(a,b) -> \i -> (a:b:i)) [] x1ptPopSomePairs
-    x1ptPopIn <- return $ map (\(a,b) -> ((!!!) genePop (a-1) "x1A",
-                                         (!!!) genePop (b-1) "x1B"))
-                             x1ptPopSomePairs
+    let x1ptPopSomePairs = take p1PCount x1ptPopPairs
+    let x1UnpairPop = foldr (\(a,b) -> \i -> (a:b:i)) [] x1ptPopSomePairs
+    let x1ptPopIn = map (\(a,b) -> ((!!!) genePop (a-1) "x1A",
+                                    (!!!) genePop (b-1) "x1B"))
+                    x1ptPopSomePairs
     x1ptPopOut <- mapM (x1PHelper g) x1ptPopIn
-    x1ptPopOutFlat <- return $ foldr (\(a,b) -> \i -> (a:b:i)) [] x1ptPopOut
-    x1ptPop <- return $ putTogether (sort x1UnpairPop) x1ptPopOutFlat genePop
+    let x1ptPopOutFlat = foldr (\(a,b) -> \i -> (a:b:i)) [] x1ptPopOut
+    let x1ptPop = putTogether (sort x1UnpairPop) x1ptPopOutFlat genePop
 
     -- 2Pt crossover
     x2ptPopPairs <- generatePairs nSelect
-    x2ptPopSome <- return $ take p2PCount x2ptPopPairs
-    x2UnpairPop <- return $ foldr (\(a,b) -> \i -> (a:b:i)) [] x2ptPopSome
-    x2ptPopIn <- return $ map (\(a,b) -> ((!!!) x1ptPop (a-1) "x2A",
-                                         (!!!) x1ptPop (b-1) "x2B"))
-                             x2ptPopSome
+    let x2ptPopSome = take p2PCount x2ptPopPairs
+    let x2UnpairPop = foldr (\(a,b) -> \i -> (a:b:i)) [] x2ptPopSome
+    let x2ptPopIn = map (\(a,b) -> ((!!!) x1ptPop (a-1) "x2A",
+                                    (!!!) x1ptPop (b-1) "x2B"))
+                    x2ptPopSome
     x2ptPopOut <- mapM (x2PHelper g) x2ptPopIn
-    x2ptPopOutFlat <- return $ foldr (\(a,b) -> \i -> (a:b:i)) [] x2ptPopOut
-    x2ptPop <- return $ putTogether (sort x2UnpairPop) x2ptPopOutFlat x1ptPop
+    let x2ptPopOutFlat = foldr (\(a,b) -> \i -> (a:b:i)) [] x2ptPopOut
+    let x2ptPop = putTogether (sort x2UnpairPop) x2ptPopOutFlat x1ptPop
 
     -- Gene crossover
     xGPopPairs <- generatePairs nSelect
-    xGPopSome <- return $ take pGRCount xGPopPairs
-    xGUnpairPop <- return $ foldr (\(a,b) -> \i -> (a:b:i)) [] xGPopSome
-    xGPopIn <- return $ map (\(a,b) -> ((!!!) x2ptPop (a-1) "xGA",
-                                       (!!!) x2ptPop (b-1) "xGB"))
-                             xGPopSome
+    let xGPopSome = take pGRCount xGPopPairs
+    let xGUnpairPop = foldr (\(a,b) -> \i -> (a:b:i)) [] xGPopSome
+    let xGPopIn = map (\(a,b) -> ((!!!) x2ptPop (a-1) "xGA",
+                                  (!!!) x2ptPop (b-1) "xGB"))
+                  xGPopSome
     xGPopOut <- mapM (xGHelper g) xGPopIn
-    xGPopOutFlat <- return $ foldr (\(a,b) -> \i -> (a:b:i)) [] xGPopOut
-    xGPop <- return $ putTogether (sort xGUnpairPop) xGPopOutFlat x2ptPop
+    let xGPopOutFlat = foldr (\(a,b) -> \i -> (a:b:i)) [] xGPopOut
+    let xGPop = putTogether (sort xGUnpairPop) xGPopOutFlat x2ptPop
 
     return xGPop
     where
@@ -180,6 +177,7 @@ applyMutations g params r s = do
       p1PCount = floor (fnSelect * (p1R r))
       p2PCount = floor (fnSelect * (p2R r))
       pGRCount = floor (fnSelect * (pGR r))
+
 {-| 
  Single step of GEP algorithm
 -}
@@ -199,7 +197,7 @@ singleStep pop g params r express_individual fitness_evaluate
        filtered <- fillFilterGap g nSelect initialFiltering
 
        -- selection
-       selected <- return $ map (\(_,b) -> b) (selector indices filtered)
+       let selected = map (\(_,b) -> b) (selector indices filtered)
 
        -- mutation
        resultingPop <- applyMutations g params r selected
