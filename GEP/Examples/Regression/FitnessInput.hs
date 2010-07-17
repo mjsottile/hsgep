@@ -5,8 +5,6 @@
 
   Author: mjsottile\@computer.org
 
-  NOTE: Parsec code for CSV files 
-
 -}
 module GEP.Examples.Regression.FitnessInput (
   readFitnessInput
