@@ -9,7 +9,6 @@ module GEP.Random (
      randomSymbolList,
      newIndividual,
      newPopulation,
-     mutateSymbol,
      mutate
 ) where
 
@@ -64,27 +63,32 @@ newPopulation g n =
      i <- newIndividual g (numGenes g)
      return ([i]++p)
 
-mutateSymbol :: Genome -> Rates -> Symbol -> Double -> Bool -> GEPMonad Symbol
-mutateSymbol g r _ p True | (p < (pMutate r)) = 
-  do s <- randomSymbol (allsymbols g)
-     return s
+-- | Mutate symbols in a gene. Symbols are chosen from terminals and allsymbols
+--   for head and tail of the gene respectively.
+mutateGene :: Genome -> Rates -> Gene -> GEPMonad Gene
+mutateGene g r gene = do
+    let (h, t) = splitAt (headLength g) gene
+    hMutated <- mapM mutateHeadSymbol h
+    tMutated <- mapM mutateTailSymbol t
+    return $ hMutated ++ tMutated
+    where
+        mutateTailSymbol :: Symbol -> GEPMonad Symbol
+        mutateTailSymbol s = mutateSymbol r s $ terminals g
 
-mutateSymbol g r _ p False | (p < (pMutate r)) =
-  do s <- randomSymbol (terminals g)
-     return s
+        mutateHeadSymbol :: Symbol -> GEPMonad Symbol
+        mutateHeadSymbol s = mutateSymbol r s $ allsymbols g
 
-mutateSymbol _ _ s _ _ | otherwise = 
-  do return s 
+-- | Mutate single symbol with probability pMutate choosing from given symbol
+--   list.
+mutateSymbol :: Rates -> Symbol -> [Symbol] -> GEPMonad Symbol
+mutateSymbol r s ss =
+    nextF 1.0 >>= \prob ->
+    if prob < pMutate r
+    then randomSymbol ss
+    else return s
 
-mutateGene :: Genome -> Rates -> [Symbol] -> GEPMonad [Symbol]
-mutateGene _ _ [] = do return []
-mutateGene g r (s:ss) =
-  do prob <- nextF 1.0
-     news <- mutateSymbol g r s prob ((length ss) >= (tailLength g))
-     newss <- mutateGene g r ss
-     return ([news]++newss)
 
-mutate :: Genome -> Rates -> [Symbol] -> GEPMonad [Symbol]
+mutate :: Genome -> Rates -> Chromosome -> GEPMonad Chromosome
 mutate g r s =
   do
     genes' <- mapM (\i -> mutateGene g r i) genes
