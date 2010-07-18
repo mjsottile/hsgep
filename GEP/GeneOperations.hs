@@ -22,6 +22,27 @@ module GEP.GeneOperations (
 
 import GEP.Types
 
+-- There is a set of basic (not GA) operations on Sequences, Genes and
+-- Chromosomes, mainly composition and splitting.
+-- These should be encapsulated to allow flexible transition from one type of
+-- sequences---e.g. [Char]---to any other---e.g. ByteString---wo affecting the
+-- GA operators.
+
+
+-- | Splits a sequence into three by given positions. Similar to the splitAt but
+--   for two positions. The positions must be in a non-descending order. This is
+--   not checked.
+splitThirds :: (Int, Int) -> Sequence -> (Sequence, Sequence, Sequence)
+splitThirds (l1, l2) x = (fx,mx,bx)
+  where
+    (fx,tmp) = splitAt l1 x
+    (mx,bx) = splitAt (l2-l1) tmp
+
+
+--  The rest of the code covers the GA operators.
+--
+
+
 -- | 
 --  One-point crossover
 crossover1pt :: (Chromosome, Chromosome) -- ^ Pair of individuals before crossover
@@ -34,15 +55,6 @@ crossover1pt (x,y) loc = (x', y')
     x' = fx++by
     y' = fy++bx
 
---
--- helper to split a list into three parts. 
---
-splitThirds :: Sequence -> Int -> Int -> (Sequence, Sequence, Sequence)
-splitThirds x l1 l2 = (fx,mx,bx)
-  where
-    (fx,tmp) = splitAt l1 x
-    (mx,bx) = splitAt (l2-l1) tmp
-
 -- |
 --  Two-point crossover
 crossover2pt :: (Chromosome, Chromosome) -- ^ Pair of individuals before crossover
@@ -54,8 +66,8 @@ crossover2pt (x,y) loc1 loc2 = (x',y')
     -- make sure we know which location is lower than the other
     minLoc = min loc1 loc2
     maxLoc = max loc1 loc2
-    (fx,mx,bx) = splitThirds x (minLoc-1) (maxLoc-1)
-    (fy,my,by) = splitThirds y (minLoc-1) (maxLoc-1)
+    (fx,mx,bx) = splitThirds (minLoc-1, maxLoc-1) x
+    (fy,my,by) = splitThirds (minLoc-1, maxLoc-1) y
     x' = fx++my++bx
     y' = fy++mx++by
 
@@ -68,7 +80,7 @@ geneExtract x gene geneLen = (before, theGene, after)
   where
     geneStart = geneLen * gene
     geneEnd   = geneStart + geneLen
-    (before,theGene,after) = splitThirds x geneStart geneEnd
+    (before,theGene,after) = splitThirds (geneStart, geneEnd) x
 
 -- |
 --  Gene crossover
