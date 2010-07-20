@@ -20,36 +20,27 @@ module GEP.Rmonad (
 ) where
 
 import System.Random.Mersenne.Pure64
-import Control.Monad.State.Strict
+import Control.Monad.Mersenne.Random
 
-newtype Rmonad s a = S (State s a)
-    deriving (Monad)
-
--- | The GEPMonad is just a specific instance of the State monad where the
---   state is just the PureMT PRNG state.
-type GEPMonad a = Rmonad PureMT a
+type GEPMonad a = Rand a
 
 -- | Generate a random number as a Double between 0.0 and the given upper
 --   bound.
 nextF :: Double -- ^ Upper bound.
-      -> Rmonad PureMT Double
-nextF up = S $ do st <- get
-                  let (x,st') = randomDouble st
-                  put st'
-                  return (x*up)
+      -> Rand Double
+nextF up = do x <- getDouble
+              return (x*up)
 
 -- | Generate a random integer between 1 and the upper bound (inclusive).
 nextR :: Int -- ^ Upper bound.
-      -> Rmonad PureMT Int
-nextR up = S $ do st <- get
-                  let (x,st') = randomInt st
-                  put st'
-                  return (1 + ((abs x) `mod` up))
+      -> Rand Int
+nextR up = do x <- getInt
+              return (1 + ((abs x) `mod` up))
 
 -- | Generate a list of random integers.
 nextRList :: Int -- ^ Number of integers to generate
           -> Int -- ^ Upper bound for each integer.
-          -> Rmonad PureMT [Int]
+          -> Rand [Int]
 nextRList 0 _  = do return []
 nextRList n up = do val <- nextR up
                     vals <- nextRList (n-1) up
@@ -60,7 +51,7 @@ removeNth [] _ = []
 removeNth (_:xs) 0 = (xs)
 removeNth (x:xs) n = x:(removeNth xs (n-1))
 
-shuffle :: [Int] -> Rmonad PureMT [Int]
+shuffle :: [Int] -> Rand [Int]
 shuffle [] = do return []
 shuffle x = do val <- nextR $ (length x)
                rest <- shuffle $ (removeNth x (val-1))
@@ -72,7 +63,7 @@ pairify (_:[]) = []
 pairify (x:y:xs) = ((x,y):(pairify xs))
 
 -- | Document me!
-generatePairs :: Int -> Rmonad PureMT [(Int,Int)]
+generatePairs :: Int -> Rand [(Int,Int)]
 generatePairs 0 = do return []
 generatePairs 1 = do return []
 generatePairs n = do vals <- shuffle $! [1..n]
@@ -80,7 +71,7 @@ generatePairs n = do vals <- shuffle $! [1..n]
 
 -- | Generate a list of n random integers such that each entry occurs at most
 --   once.  Each number in the list must be unique.
-nextRListUnique :: Int -> [Int] -> Int -> Rmonad PureMT [Int]
+nextRListUnique :: Int -> [Int] -> Int -> Rand [Int]
 nextRListUnique 0 l _  = do return l
 nextRListUnique n l up = do val <- nextR up
                             let t = foldr (||) False (map (\i -> i==val) l)
@@ -90,7 +81,7 @@ nextRListUnique n l up = do val <- nextR up
                                else do ret <- nextRListUnique (n-1) (val:l) up
                                        return ret
 
-nextRListPairs :: Int -> Int -> Rmonad PureMT [(Int,Int)]
+nextRListPairs :: Int -> Int -> Rand [(Int,Int)]
 nextRListPairs 0 _  = do return []
 nextRListPairs n up = do val1 <- nextR up
                          val2 <- nextRDifferent up val1
@@ -101,13 +92,12 @@ nextRListPairs n up = do val1 <- nextR up
 --   the integer provided.
 nextRDifferent :: Int -- ^ Upper bound.
                -> Int -- ^ Integer to avoid.
-               -> Rmonad PureMT Int
+               -> Rand Int
 nextRDifferent up x = do x' <- nextR up
                          if x' == x
                             then do x'' <- nextRDifferent up x
                                     return x''
                             else return x'
 
--- | Run function for the Rmonad.
-runRmonad :: Rmonad PureMT a -> PureMT -> (a, PureMT)
-runRmonad (S m) s = runState m s
+runRmonad :: Rand a -> PureMT -> (a, PureMT)
+runRmonad = runRandom
