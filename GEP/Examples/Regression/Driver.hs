@@ -11,7 +11,11 @@ import GEP.GenericDriver
 import GEP.Util.ConfigurationReader
 import GEP.Examples.Regression.ArithmeticIndividual
 import GEP.Examples.Regression.FitnessInput
-import GEP.Examples.Regression.MaximaClient
+-- NOTE: you can use the files in the maxima subdirectory next to this
+--       example to integrate the maxima client/server for pretty printing
+--       polynomials
+--
+-- import GEP.Examples.Regression.MaximaClient
 import System.Environment (getArgs)
 import Control.Monad (when)
 
@@ -62,10 +66,12 @@ main = do
   putStrLn $ "DONE  : "++(show best)
   putStrLn $ "INFIX : "++bestString 
 
-  putStrLn $ "MAXIMA OUTPUT :"
   -- send flattened individual to maxima for pretty printing
   -- and print lines that come back
-  maximaExpand bestString "qubu.net" 12777 >>= mapM_ putStrLn
+  -- UNCOMMENT THE FOLLOWING TO USE MAXIMA
+
+  -- putStrLn $ "MAXIMA OUTPUT :"
+  -- maximaExpand bestString "qubu.net" 12777 >>= mapM_ putStrLn
 
   -- dump to dot file if one was specified
   dumpDotFile dotfile bestExpressed

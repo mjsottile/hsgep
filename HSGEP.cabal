@@ -30,7 +30,7 @@ Executable HSGEP_Regression
     GHC-Options: -Wall
     GHC-Prof-Options: -Wall -auto-all -caf-all
 
-  Build-Depends:   network, csv
+  Build-Depends:   csv
   Main-Is:         GEP/Examples/Regression/Driver.hs
 
 Executable HSGEP_CADensity
