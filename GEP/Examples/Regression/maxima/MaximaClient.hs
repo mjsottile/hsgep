@@ -1,6 +1,8 @@
 --
 -- code for a maxima client
 --
+-- mjsottile\@computer.org
+-- 
 
 module GEP.Examples.Regression.MaximaClient (
     maximaExpand,
