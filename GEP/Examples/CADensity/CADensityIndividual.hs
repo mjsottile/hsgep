@@ -1,6 +1,8 @@
 -- |
 --  Code for individuals representing the 1D CA Density classification problem
 --
+-- matt\@galois.com
+--
 module GEP.Examples.CADensity.CADensityIndividual(
     express_individual,
     fitness_evaluate,
