@@ -27,7 +27,8 @@ import System.Console.GetOpt
 data Options = Options {
   optParams :: String,
   optFitness :: String,
-  optDotfile :: Maybe String
+  optDotfile :: Maybe String,
+  optVerbose :: Bool
 } 
 
 options :: [OptDescr (Options -> IO Options)]
@@ -35,6 +36,7 @@ options =
   [ Option ['i'] ["params"]  (ReqArg inputFile "FILE")   "Parameters"
   , Option ['f'] ["fitness"] (ReqArg fitnessFile "FILE") "Fitness tests"
   , Option ['d'] ["dot"]     (OptArg dotFile "FILE")     "Graphviz dotfile"
+  , Option ['v'] ["verbose"] (NoArg  verbose)            "Verbose output"
   ]
 
 checkOptions :: Options -> IO ()
@@ -64,11 +66,15 @@ fitnessFile arg opt = return opt { optFitness = arg }
 dotFile :: Maybe String -> Options -> IO Options
 dotFile arg opt = return opt { optDotfile = arg }
 
+verbose :: Options -> IO Options
+verbose opt = return opt { optVerbose = True }
+
 defaultOptions :: Options
 defaultOptions = Options { 
   optParams = "", 
   optFitness = "", 
-  optDotfile = Nothing 
+  optDotfile = Nothing,
+  optVerbose = False
 }
 
 --
