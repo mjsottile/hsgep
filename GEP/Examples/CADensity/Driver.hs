@@ -34,8 +34,8 @@ main = do
   validateArgs args
 
   -- give args nice names
-  configFile <- return $ head args
-  fitnessFile <- return $ head (tail args)
+  let configFile = head args
+  let fitnessFile = head (tail args)
 
   -- if optional third argument is present, assume it is dot file
   dotfile <- if ((length args) == 3) then return $ Just $head (tail (tail args))
