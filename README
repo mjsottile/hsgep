@@ -73,7 +73,7 @@ To run a regression example, you can use example input parameter and data
 files from the Examples/Regression directory.  For example, after building
 the code, you can run the example "test1" as:
 
-./dist/build/HSGEP_Regression/HSGEP_Regression ./Examples/Regression/test1.in ./Examples/Regression/test1.csv
+./dist/build/HSGEP_Regression/HSGEP_Regression -i ./Examples/Regression/test1.in -f ./Examples/Regression/test1.csv
 
 The current code will then evolve a solution that maximizes the fitness
 function (goodness of fit to the given data points), and will print it out.
