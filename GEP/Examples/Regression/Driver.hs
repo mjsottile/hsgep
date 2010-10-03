@@ -1,3 +1,5 @@
+{-# LANGUAGE DeriveDataTypeable #-}
+
 -- |
 --  Haskell gene expression programming, regression example
 -- 
@@ -16,41 +18,72 @@ import GEP.Examples.Regression.FitnessInput
 --       polynomials
 --
 -- import GEP.Examples.Regression.MaximaClient
-import System.Environment (getArgs)
-import Control.Monad (when)
+import System (getArgs)
+import System.Console.GetOpt
 
 --
--- sanity check arguments to see if we have enough
+-- command line options
 --
-validateArgs :: [String] -> IO ()
-validateArgs s =
-    when (length s < 2) $
-        error "Must specify config file and fitness test data file names."
+data Options = Options {
+  optParams :: String,
+  optFitness :: String,
+  optDotfile :: Maybe String
+} 
+
+options :: [OptDescr (Options -> IO Options)]
+options = 
+  [ Option ['i'] ["params"]  (ReqArg inputFile "FILE")   "Parameters"
+  , Option ['f'] ["fitness"] (ReqArg fitnessFile "FILE") "Fitness tests"
+  , Option ['d'] ["dot"]     (OptArg dotFile "FILE")     "Graphviz dotfile"
+  ]
+
+checkOptions :: Options -> IO ()
+checkOptions opts =
+  case (optParams opts) of
+    "" -> error ("Parameter file required.")
+    _ -> case (optFitness opts) of
+           "" -> error ("Fitness file required.")
+           _  -> return ()
+
+programOpts :: [String] -> IO Options
+programOpts argv = do
+  case getOpt Permute options argv of
+    (actions, [], []) -> do opts <- foldl (>>=) (return defaultOptions) actions
+                            checkOptions opts
+                            return opts
+    (_, nonOpts, []) -> error ( "unrecognized arguments: " ++ unwords nonOpts)
+    (_, _, msgs) -> error (concat msgs ++ usageInfo header options)
+  where header = "Usage: regression [OPTION...]"
+
+inputFile :: String -> Options -> IO Options
+inputFile arg opt = return opt { optParams = arg }
+
+fitnessFile :: String -> Options -> IO Options
+fitnessFile arg opt = return opt { optFitness = arg }
+
+dotFile :: Maybe String -> Options -> IO Options
+dotFile arg opt = return opt { optDotfile = arg }
+
+defaultOptions :: Options
+defaultOptions = Options { 
+  optParams = "", 
+  optFitness = "", 
+  optDotfile = Nothing 
+}
 
 --
 -- main
 --
 main :: IO ()
 main = do
-  -- read in parameters from specified file
   args <- getArgs
-
-  -- sanity check
-  validateArgs args
-
-  -- give args nice names
-  let configFile = head args
-  let fitnessFile = head (tail args)
-
-  -- if optional third argument is present, assume it is dot file
-  dotfile <- if length args == 3 then return $ Just $head (tail (tail args))
-                                     else return $ Nothing
+  cmdOpts <- programOpts args
   
   -- read parameters
-  (rs,gnome,params) <- readParameters configFile
+  (rs,gnome,params) <- readParameters (optParams cmdOpts)
   
   -- read fitness test data
-  (testDict, ys) <- readFitnessInput fitnessFile
+  (testDict, ys) <- readFitnessInput (optFitness cmdOpts)
 
   -- call generic driver
   (best,pop) <- gepDriver params rs gnome testDict ys fitness_evaluate_absolute express_individual
@@ -74,4 +107,6 @@ main = do
   -- maximaExpand bestString "qubu.net" 12777 >>= mapM_ putStrLn
 
   -- dump to dot file if one was specified
-  dumpDotFile dotfile bestExpressed
+  case (optDotfile cmdOpts) of
+    Nothing -> return ()
+    Just s  -> dumpDotFile s bestExpressed

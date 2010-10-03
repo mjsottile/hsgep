@@ -32,9 +32,8 @@ data AINode = BinOp BinOperator AINode AINode
 --
 -- dump an expressed individual to a file as a graphviz dot file
 --
-dumpDotFile :: Maybe String -> AINode -> IO ()
-dumpDotFile Nothing      _ = return ()
-dumpDotFile (Just fname) n = do
+dumpDotFile :: String -> AINode -> IO ()
+dumpDotFile fname n = do
   fh <- openFile fname WriteMode
   hPutStrLn fh "digraph HSGEP_Regression {"
   mapM_ (hPutStrLn fh) (aiToGraphviz n)
