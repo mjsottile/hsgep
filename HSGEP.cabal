@@ -32,6 +32,8 @@ Executable HSGEP_Regression
 
   Build-Depends:   csv
   Main-Is:         GEP/Examples/Regression/Driver.hs
+  Other-Modules:   GEP.Examples.Regression.FitnessInput,
+                   GEP.Examples.Regression.ArithmeticIndividual
 
 Executable HSGEP_CADensity
     Buildable:  False
