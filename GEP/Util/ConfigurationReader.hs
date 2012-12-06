@@ -11,7 +11,7 @@ module GEP.Util.ConfigurationReader (
 import GEP.Params
 import GEP.Types
 import System.IO
-import Maybe
+import Data.Maybe
 
 --
 -- given a list of pairs mapping keys to values, lookup the various

@@ -19,7 +19,7 @@ Library
     GHC-Options: -Wall
     GHC-Prof-Options: -Wall -auto-all -caf-all
 
-  Build-Depends:      base>=4&&<5, mtl, haskell98, mersenne-random-pure64, monad-mersenne-random, vector
+  Build-Depends:      base>=4&&<5, mtl, mersenne-random-pure64, monad-mersenne-random, vector
   Exposed-modules:
     GEP.Fitness,  GEP.GeneOperations, GEP.MonadicGeneOperations,
     GEP.Params,   GEP.Random,         GEP.Rmonad,

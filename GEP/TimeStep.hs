@@ -47,7 +47,7 @@ import GEP.Fitness
 import GEP.Types
 import GEP.Params
 import Debug.Trace
-import List (sort)
+import Data.List (sort)
 
 
 -- | debugging version of (!!) thanks to #haskell help.  by default we let

@@ -26,7 +26,7 @@ module GEP.Selection (
 
 import GEP.Types
 import GEP.Rmonad
-import List (sort)
+import Data.List (sort)
 
 {-|
   Given a set of pairs (f,i) where f is the fitness of the individual i,

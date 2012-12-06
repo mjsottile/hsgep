@@ -18,7 +18,7 @@ import GEP.Examples.Regression.FitnessInput
 --       polynomials
 --
 -- import GEP.Examples.Regression.MaximaClient
-import System (getArgs)
+import System.Environment (getArgs)
 import System.Console.GetOpt
 
 --
