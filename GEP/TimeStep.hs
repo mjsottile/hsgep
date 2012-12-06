@@ -181,14 +181,14 @@ applyMutations g params r s = do
 {-| 
  Single step of GEP algorithm
 -}
-singleStep :: [Chromosome]       -- ^ List of individuals 
-           -> Genome             -- ^ Genome
-           -> SimParams          -- ^ Simulation parameters
-           -> Rates              -- ^ Gene operator rates
+singleStep :: [Chromosome]         -- ^ List of individuals 
+           -> Genome               -- ^ Genome
+           -> SimParams            -- ^ Simulation parameters
+           -> Rates                -- ^ Gene operator rates
            -> ExpressionFunction a -- ^ Expression function
-           -> FitnessFunction a b-- ^ Fitness function
-           -> TestDict b                -- ^ Fitness inputs
-           -> TestOuts            -- ^ Fitness outputs
+           -> FitnessFunction a b  -- ^ Fitness function
+           -> TestDict b           -- ^ Fitness inputs
+           -> TestOuts             -- ^ Fitness outputs
            -> GEPMonad (Double, [Chromosome])
 singleStep pop g params r express_individual fitness_evaluate 
            testInputs testOutputs =
@@ -227,15 +227,15 @@ singleStep pop g params r express_individual fitness_evaluate
                 (intToDouble (length initialFiltering)) 
                 (rouletteExponent params)
 
-multiStep :: [Chromosome]        -- ^ List of individuals
-          -> Genome              -- ^ Genome
-          -> SimParams           -- ^ Simulation parameters
-          -> Rates               -- ^ Gene operator rates
+multiStep :: [Chromosome]         -- ^ List of individuals
+          -> Genome               -- ^ Genome
+          -> SimParams            -- ^ Simulation parameters
+          -> Rates                -- ^ Gene operator rates
           -> ExpressionFunction a -- ^ Expression function
-          -> FitnessFunction a b -- ^ Fitness function
-          -> TestDict b                 -- ^ Fitness inputs
+          -> FitnessFunction a b  -- ^ Fitness function
+          -> TestDict b           -- ^ Fitness inputs
           -> TestOuts             -- ^ Fitness outputs
-          -> Int                 -- ^ Maximum number of generations to test
+          -> Int                  -- ^ Maximum number of generations to test
           -> Double               -- ^ Ideal fitness
           -> GEPMonad (Double, [Chromosome])
 multiStep pop g params r expresser fitnesser tests outs 0 _ =

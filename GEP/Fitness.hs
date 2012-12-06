@@ -20,6 +20,7 @@ module GEP.Fitness
     ) where
 
 import GEP.Types
+
 -- | Fitness function type
 type FitnessFunction a b = a -> TestCase b -> Double -> Double -> Double
 
@@ -48,13 +49,13 @@ pairSort ((f,i):rest) =
 --  Fitness evaluator for generic individuals.  This needs to go away
 --  and use a more general approach like evaluateFitness above.
 -- 
-fitness_tester :: a               -- ^ Expressed individual
+fitness_tester :: a                   -- ^ Expressed individual
                -> FitnessFunction a b -- ^ Fitness function
-               -> TestDict b             -- ^ List of symbol tables for test cases
-               -> TestOuts         -- ^ List of expected outputs for test cases
-               -> Double           -- ^ Range of selection.  M in original
-                                  --   GEP paper equations for fitness.
-               -> Double           -- ^ Fitness value for given individual
+               -> TestDict b          -- ^ List of symbol tables for test cases
+               -> TestOuts            -- ^ List of expected outputs for test cases
+               -> Double              -- ^ Range of selection.  M in original
+                                      --   GEP paper equations for fitness.
+               -> Double              -- ^ Fitness value for given individual
 fitness_tester who ffun inputDict outputs m = 
   foldr (+) 0.0 tests
   where 
@@ -67,10 +68,10 @@ fitness_tester who ffun inputDict outputs m =
 --  only those individuals that have a valid fitness value.  This means those
 --  that are +/- infinity or NaN are removed.
 --
-fitness_filter :: [Double]              -- ^ Fitness values
-               -> [Chromosome]         -- ^ Individuals
+fitness_filter :: [Double]               -- ^ Fitness values
+               -> [Chromosome]           -- ^ Individuals
                -> [(Double, Chromosome)] -- ^ Paired fitness/individuals after 
-                                       --   filtering
+                                         --   filtering
 fitness_filter fitnesses pop =
     foldr (\(i,j) -> 
            \x -> if ((isNaN i) || (isInfinite i)) 
