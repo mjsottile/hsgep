@@ -3,7 +3,7 @@ Version:       0.1.4
 Cabal-Version: >= 1.6
 License:       BSD3
 License-File:  LICENSE
-Copyright:     (c) 2009-2010 Matthew Sottile
+Copyright:     (c) 2009-2012 Matthew Sottile
 Author:        Matthew Sottile
 Maintainer:    Matthew Sottile <mjsottile@computer.org>
 Stability:     alpha
