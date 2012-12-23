@@ -38,15 +38,9 @@ getBest :: [(Double, Chromosome)]      -- ^ Fitness/Individual pairs
         -> Maybe (Double, Chromosome)  -- ^ Best pair, or Nothing if no such pair
 getBest []          = Nothing
 getBest individuals =
-  let innerBest [] bi bf = Just (bf,bi)
-      innerBest ((f,i):rest) bi bf = if f > bf 
-                                     then 
-                                         innerBest rest i f
-                                     else 
-                                         innerBest rest bi bf
-      (firstB, firstI) = head individuals
-  in
-    innerBest (tail individuals) firstI firstB
+  Just $ foldl1 (\(f1,i1) (f2,i2) -> if f1 > f2 then (f1,i1) 
+                                                else (f2,i2)) 
+                individuals
 
 weight_function :: Double -> Double -> Double
 weight_function n e =

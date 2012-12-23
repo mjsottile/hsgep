@@ -197,7 +197,7 @@ singleStep pop g params r express_individual fitness_evaluate
        filtered <- fillFilterGap g nSelect initialFiltering
 
        -- selection
-       let selected = map (\(_,b) -> b) (selector indices filtered)
+       let selected = map snd (selector indices filtered)
 
        -- mutation
        resultingPop <- applyMutations g params r selected

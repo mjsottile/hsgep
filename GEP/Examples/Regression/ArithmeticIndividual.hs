@@ -172,14 +172,8 @@ connect_genes g x | otherwise     = connect_genes g (xh':ys)
     xh' = GeneConnector (express c [xh,y])
 
 lookup_sym :: Char -> AISymTable -> Maybe Double
-lookup_sym _ []             = Nothing
 lookup_sym '1' _            = Just 1.0
-lookup_sym sym ((c,x):syms) =
-    if sym==c 
-    then 
-        Just x 
-    else 
-        (lookup_sym sym syms)
+lookup_sym sym syms         = lookup sym syms
 
 evaluate :: AINode -> AISymTable -> Double
 evaluate node syms =

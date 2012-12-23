@@ -22,6 +22,8 @@ module GEP.Types (
     isNonterminal
 ) where
 
+import Data.List (foldl')
+
 -- | A symbol in a chromosome
 type Symbol     = Char
 
@@ -81,12 +83,7 @@ geneLength g = (headLength g) + (tailLength g)
 isNonterminal :: Symbol  -- ^ Symbol to test 
               -> Genome  -- ^ Genome providing context
               -> Bool    -- ^ True if symbol is a nonterminal, false otherwise
-isNonterminal s g =
-  let isNT []                 = False
-      isNT (x:_)  | (s == x)  = True
-      isNT (_:xs) | otherwise = (isNT xs)
-  in
-    isNT (nonterminals g)
+isNonterminal s g = elem s (nonterminals g)
 
 -- | Fracture a chromosome into a set of genes
 chromToGenes :: Chromosome  -- ^ Chromosome to split into a set of genes 
@@ -98,4 +95,4 @@ chromToGenes c  glen = (take glen c):(chromToGenes (drop glen c) glen)
 -- | Assemble a chromosome from a set of genes
 genesToChrom :: [Gene]      -- ^ List of genes
              -> Chromosome  -- ^ Chromosome assembled from genes
-genesToChrom genes = foldl (++) [] genes
+genesToChrom genes = foldl' (++) [] genes
