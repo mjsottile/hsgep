@@ -22,8 +22,6 @@ module GEP.Types (
     isNonterminal
 ) where
 
-import Data.List (foldl')
-
 -- | A symbol in a chromosome
 type Symbol     = Char
 
@@ -95,4 +93,4 @@ chromToGenes c  glen = (take glen c):(chromToGenes (drop glen c) glen)
 -- | Assemble a chromosome from a set of genes
 genesToChrom :: [Gene]      -- ^ List of genes
              -> Chromosome  -- ^ Chromosome assembled from genes
-genesToChrom genes = foldl' (++) [] genes
+genesToChrom genes = concat genes
