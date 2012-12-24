@@ -62,33 +62,31 @@ readParameters filename =
 --
 
 lookupDouble :: String -> [(String,String)] -> Maybe Double
-lookupDouble _ [] = Nothing
-lookupDouble k ((key,value):_) | (k==key)  = Just (read value)
-lookupDouble k ((_,_):kvs)     | otherwise = lookupDouble k kvs
+lookupDouble k dict = 
+	case (lookup k dict) of
+		Nothing -> Nothing
+		Just s  -> Just (read s)
 
 lookupInt :: String -> [(String,String)] -> Maybe Int
-lookupInt _ [] = Nothing
-lookupInt k ((key,value):_) | (k==key)  = Just (read value)
-lookupInt k ((_,_):kvs)     | otherwise = lookupInt k kvs
+lookupInt k dict =
+	case (lookup k dict) of
+		Nothing -> Nothing
+		Just s  -> Just (read s)
 
 lookupString :: String -> [(String,String)] -> Maybe String
-lookupString _ [] = Nothing
-lookupString k ((key,value):_) | (k==key)  = Just value
-lookupString k ((_,_):kvs)     | otherwise = lookupString k kvs
+lookupString k dict = lookup k dict
 
 lookupChar :: String -> [(String,String)] -> Maybe Char
-lookupChar _ [] = Nothing
-lookupChar k ((key,value):_) | (k==key)  = Just (head value)
-lookupChar k ((_,_):kvs)     | otherwise = lookupChar k kvs
+lookupChar k dict = 
+	case (lookup k dict) of
+		Nothing -> Nothing
+		Just s  -> Just (head s)
 
 --
 -- given a string, remove whitespace
 --
 removeWhitespace :: String -> String
-removeWhitespace []                   = []
-removeWhitespace (x:xs) | (x == ' ')  = removeWhitespace xs
-removeWhitespace (x:xs) | (x == '\t') = removeWhitespace xs
-removeWhitespace (x:xs) | otherwise   = x:(removeWhitespace xs)
+removeWhitespace s = filter (\x -> x /= ' ' && x /= '\t') s
 
 --
 -- split a line formatted as "KEY=VALUE", removing whitespace
@@ -97,9 +95,8 @@ splitLine :: String -> (String,String)
 splitLine l = (front,back)
   where
     cleaned = removeWhitespace l
-    front   = takeWhile (\i -> not (i == '=')) cleaned
-    back    = drop 1 (dropWhile (\i -> not (i == '=')) cleaned)
-
+    front   = takeWhile (\i -> i /= '=') cleaned
+    back    = drop (1 + length front) cleaned
 --
 -- read a file handle and return all of the lines in the file
 --
@@ -118,4 +115,4 @@ fileToLines h = do eof <- hIsEOF h
 readConfiguration :: String -> IO [(String,String)]
 readConfiguration filename = do handle <- openFile filename ReadMode
                                 fileLines <- fileToLines handle
-                                return $ map (\i -> splitLine i) fileLines
+                                return $ map splitLine fileLines
