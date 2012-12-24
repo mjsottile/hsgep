@@ -14,6 +14,7 @@ module GEP.Examples.Regression.ArithmeticIndividual(
 ) where
 
 import GEP.Types
+import GEP.Expression
 import Data.Maybe
 import System.IO
 
@@ -103,14 +104,6 @@ arity '/' = 2
 arity '^' = 2
 arity _   = 0
 
-levelize :: Sequence -> Int -> [Sequence]
-levelize _  0 = []
-levelize [] _ = []
-levelize s  i =
-    front : levelize back (foldr ((+) . arity) 0 front)
-    where
-      (front,back) = splitAt i s
-
 infixWalker :: AINode -> String
 infixWalker (Terminal c) = [c]
 infixWalker (UnOp Sqrt e) = "sqrt("++ infixWalker e ++")"
@@ -158,7 +151,7 @@ express_individual chrom g =
   connect_genes g ets
   where
     genes = chromToGenes chrom (geneLength g)
-    ets = map (\i -> head (assemble (levelize i 1))) genes
+    ets = map (\i -> head (assemble (levelize arity i 1))) genes
 
 connect_genes :: Genome -> [AINode] -> AINode
 connect_genes _ x | length x == 1 = head x

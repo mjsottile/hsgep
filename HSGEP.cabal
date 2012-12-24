@@ -24,7 +24,7 @@ Library
     GEP.Fitness,  GEP.GeneOperations, GEP.MonadicGeneOperations,
     GEP.Params,   GEP.Random,         GEP.Rmonad,
     GEP.TimeStep, GEP.Selection,      GEP.Util.ConfigurationReader,
-    GEP.Types,    GEP.GenericDriver
+    GEP.Types,    GEP.GenericDriver,  GEP.Expression
 
 Executable HSGEP_Regression
     GHC-Options: -Wall
