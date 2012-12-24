@@ -12,7 +12,6 @@ module GEP.Examples.CADensity.CAFitness(
 ) where
 
 import qualified Data.Vector as U
-import Debug.Trace
 
 data CA1D = CA1D (U.Vector Bool)
   deriving Show

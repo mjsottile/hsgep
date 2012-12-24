@@ -12,7 +12,6 @@ import GEP.GenericDriver
 import GEP.Util.ConfigurationReader
 import GEP.Examples.CADensity.CADensityIndividual
 import GEP.Examples.CADensity.CAFitness
-import System.Environment (getArgs)
 import System.Exit
 
 --
@@ -28,24 +27,13 @@ validateArgs s = do
 main :: IO ()
 main = do
   -- read in parameters from specified file
-  args <- getArgs
+  cmdOpts <- handleCommandLine "HSGEP_Regression"
 
-  -- sanity check
-  validateArgs args
-
-  -- give args nice names
-  let configFile = head args
-  let fitnessFile = head (tail args)
-
-  -- if optional third argument is present, assume it is dot file
-  dotfile <- if ((length args) == 3) then return $ Just $head (tail (tail args))
-                                     else return $ Nothing
-  
   -- read parameters
-  (rs,gnome,params) <- readParameters configFile
+  (rs,gnome,params) <- readParameters (optParams cmdOpts)
   
   -- read fitness test data
-  (testDict, ys) <- readFitnessInput fitnessFile
+  (testDict, ys) <- readFitnessInput (optFitness cmdOpts)
 
   -- call generic driver
   (best,pop) <- gepDriver params rs gnome testDict ys fitness_evaluate_absolute express_individual

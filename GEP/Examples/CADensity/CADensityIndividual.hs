@@ -16,7 +16,7 @@ module GEP.Examples.CADensity.CADensityIndividual(
 import GEP.Expression
 import GEP.Examples.CADensity.CAFitness
 import GEP.Types
-import Maybe
+import Data.Maybe
 
 data TriOperator = If
                    deriving Show
@@ -103,7 +103,7 @@ assemble (c:[]) = (map (\x -> Terminal (translateTermChar x)) c)
 assemble (c:cs) = lvlAssemble c (assemble cs)
 
 express_individual :: [Char] -> [CANode]
-express_individual i = assemble (levelize i 1)
+express_individual i = assemble (levelize arity i 1)
 
 evaluate_nodes :: [CANode] -> CA7Neighborhood -> [Bool]
 evaluate_nodes nodes syms =
