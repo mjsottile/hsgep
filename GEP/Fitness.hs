@@ -20,6 +20,8 @@ module GEP.Fitness
     ) where
 
 import GEP.Types
+import Data.Function
+import Data.List (sortBy)
 
 -- | Fitness function type
 type FitnessFunction a b = a -> TestCase b -> Double -> Double -> Double
@@ -34,17 +36,12 @@ type TestDict a = [TestCase a]
 type TestOuts = [Double]
 
 --
--- Sort a list of pairs by first element of each pair.  Disregard duplicates
--- pairs.
+-- Sort a list of pairs by first element of each pair.
 --
 pairSort :: (Ord a) => [(a,b)] -> [(a,b)]
-pairSort []           = []
-pairSort ((f,i):rest) =
-    lhs++((f,i):rhs)
-    where
-      lhs = [(ff,ii) | (ff,ii) <- rest, ff <  f]
-      rhs = [(ff,ii) | (ff,ii) <- rest, ff >= f]
+pairSort = sortBy (compare `on` fst)
 
+--
 -- |
 --  Fitness evaluator for generic individuals.  This needs to go away
 --  and use a more general approach like evaluateFitness above.
@@ -57,7 +54,7 @@ fitness_tester :: a                   -- ^ Expressed individual
                                       --   GEP paper equations for fitness.
                -> Double              -- ^ Fitness value for given individual
 fitness_tester who ffun inputDict outputs m = 
-  foldr (+) 0.0 tests
+  sum tests
   where 
     tests = map (\(x,y) -> ffun who x y m) 
                 (zip inputDict outputs)
@@ -73,11 +70,8 @@ fitness_filter :: [Double]               -- ^ Fitness values
                -> [(Double, Chromosome)] -- ^ Paired fitness/individuals after 
                                          --   filtering
 fitness_filter fitnesses pop =
-    foldr (\(i,j) -> 
-           \x -> if ((isNaN i) || (isInfinite i)) 
-                 then x 
-                 else ((i,j):x)
-          ) [] (zip fitnesses pop)
+    filter (\(i,_) -> not ((isNaN i) || (isInfinite i))) 
+           (zip fitnesses pop)
 
 -- |
 --  Sort a set of individuals with fitness values by their fitness
