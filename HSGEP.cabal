@@ -1,5 +1,5 @@
 Name:          HSGEP
-Version:       0.1.4
+Version:       0.1.5
 Cabal-Version: >= 1.6
 License:       BSD3
 License-File:  LICENSE
@@ -19,7 +19,7 @@ Library
     GHC-Options: -Wall
     GHC-Prof-Options: -Wall -auto-all -caf-all
 
-  Build-Depends:      base>=4&&<5, mtl, mersenne-random-pure64, monad-mersenne-random, vector
+  Build-Depends:      base>=4&&<5, mtl, mersenne-random-pure64, monad-mersenne-random, vector, split
   Exposed-modules:
     GEP.Fitness,  GEP.GeneOperations, GEP.MonadicGeneOperations,
     GEP.Params,   GEP.Random,         GEP.Rmonad,

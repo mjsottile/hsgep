@@ -22,6 +22,8 @@ module GEP.Types (
     isNonterminal
 ) where
 
+import Data.List.Split (chunksOf)
+
 -- | A symbol in a chromosome
 type Symbol     = Char
 
@@ -87,8 +89,7 @@ isNonterminal s g = elem s (nonterminals g)
 chromToGenes :: Chromosome  -- ^ Chromosome to split into a set of genes 
              -> Int         -- ^ Length of a single gene
              -> [Gene]      -- ^ Ordered list of genes from chromosome
-chromToGenes [] _ = []
-chromToGenes c  glen = (take glen c):(chromToGenes (drop glen c) glen)
+chromToGenes c  glen = chunksOf glen c 
 
 -- | Assemble a chromosome from a set of genes
 genesToChrom :: [Gene]      -- ^ List of genes
