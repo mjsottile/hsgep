@@ -13,6 +13,7 @@ module GEP.Examples.CADensity.CADensityIndividual(
     CANode
 ) where
 
+import GEP.Expression
 import GEP.Examples.CADensity.CAFitness
 import GEP.Types
 import Maybe
@@ -41,14 +42,6 @@ arity '|' = 2 -- or
 arity '&' = 2 -- and
 arity '~' = 1 -- not
 arity _   = 0 -- terminal 
-
-levelize :: [Char] -> Int -> [[Char]]
-levelize _  0 = []
-levelize [] _ = []
-levelize s  i =
-    [front]++(levelize back (foldr (+) 0 (map arity front)))
-    where
-      (front,back) = splitAt i s
 
 infixWalker :: CANode -> String
 infixWalker (Terminal c) = [charFromTermChar c]

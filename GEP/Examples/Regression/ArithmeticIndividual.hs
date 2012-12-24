@@ -143,7 +143,7 @@ lvlAssemble (c:cs) kids =
 
 assemble :: [Sequence] -> [AINode]
 assemble []     = []
-assemble (c:[]) = map (\x -> Terminal x) c
+assemble (c:[]) = map Terminal c
 assemble (c:cs) = lvlAssemble c (assemble cs)
 
 express_individual :: Chromosome -> Genome -> AINode
