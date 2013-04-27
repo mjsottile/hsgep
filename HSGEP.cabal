@@ -36,6 +36,8 @@ Executable HSGEP_Regression
                    GEP.Examples.Regression.ArithmeticIndividual
 
 Executable HSGEP_CADensity
-    Buildable:  False
+    GHC-Options: -Wall
+    GHC-Prof-Options: -Wall -auto-all -caf-all
+
   Main-Is:         GEP/Examples/CADensity/Driver.hs
 

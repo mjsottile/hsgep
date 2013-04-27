@@ -103,7 +103,7 @@ the code to either disable it or run the Maxima server code somewhere.
        the run of the algorithm, so it would be worth taking advantage of
        them.
      - Abstract out some of the patterns currently residing in each example,
-       such as the process of expressing indiduals as structures.  The
+       such as the process of expressing individuals as structures.  The
        ultimate goal is to make the end-user code that uses the library as
        simple as possible, so absorbing as much of this into the core of the
        library will be a good step in that direction.
