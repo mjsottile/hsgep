@@ -75,10 +75,12 @@ linesWithFilter s =
   in filter (\l -> (gzlen l) && (notcomment l)) (lines s)
 
 -- checks Config File is sound. Reports first error on failures.
+-- note: removed filter that rejected lines with more than one "=" char.
+--       this would have rejected allowing '=' as a valid character in
+--       a chromosome, which we don't want to do.
 checkConfig :: [String] -> Either String Bool
 checkConfig s = 
   multicheck s [isNotEmpty, 
-                eitherAnd.(map checkDelimiter), 
                 eitherAnd.(map checkMinLineLength)]
 
 -- makes a dict out of a list of strings
@@ -104,13 +106,6 @@ multicheck x (f:fs) = case (f x) of
 isNotEmpty :: (Show a) => [a] -> Either String Bool
 isNotEmpty l = if null l then Left "List is empty on imput." 
                          else Right True
-
--- checks there is exactly one '=' char in a String.
-checkDelimiter :: String -> Either String Bool
-checkDelimiter s = 
-  let c = count '=' s in 
-  if c==1 then Right True 
-          else Left $ "Delimiter count is not 1, it is " ++ (show c) ++ " in input:\n\n" ++ s ++ "\n"
 
 -- checks a String is long enough to carry a key value pair.
 checkMinLineLength :: String -> Either String Bool
