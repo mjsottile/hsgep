@@ -24,31 +24,30 @@ import Data.Maybe
 
 readParameters :: String -> IO (Either String (Rates,Genome,SimParams) )
 readParameters path = do
-	s <- readFile path
-	case (checkConfig s) of
-		Left er -> return (Left er)			
-		Right _ -> return $ Right $ extractParameters $ readStringIntoDict s
+  s <- readFile path
+  let ls = linesWithFilter s
+  case (checkConfig ls) of
+    Left er -> return (Left er)			
+    Right _ -> return $ Right $ extractParameters $ readStringsIntoDict ls
 
--- creates a dict out of a String.
-readStringIntoDict :: String -> [(String,String)]
-readStringIntoDict = makeDict.clean
+-- creates a dict out of a String list.
+readStringsIntoDict :: [String] -> [(String,String)]
+readStringsIntoDict s = makeDict $ (map clean s)
 
 extractParameters :: [(String,String)] -> (Rates,Genome,SimParams)
 extractParameters config = (r,g,s)
+  where
+    s = SimParams { 
+      popSize          = fromJust (lookupInt    "populationSize"   config),
+      selectionRange   = fromJust (lookupDouble "selectionRange"   config),
+      maxFitness       = fromJust (lookupDouble "maxFitness"       config),
+      numGenerations   = fromJust (lookupInt    "numGenerations"   config),
+      maxISLen         = fromJust (lookupInt    "maxISLen"         config),
+      maxRISLen        = fromJust (lookupInt    "maxRISLen"        config),
+      rouletteExponent = fromJust (lookupDouble "rouletteExponent" config) 
+    }
 
-    where
-
-      s = SimParams { 
-	    popSize          = fromJust (lookupInt    "populationSize"   config),
-	    selectionRange   = fromJust (lookupDouble "selectionRange"   config),
-	    maxFitness       = fromJust (lookupDouble "maxFitness"       config),
-	    numGenerations   = fromJust (lookupInt    "numGenerations"   config),
-	    maxISLen         = fromJust (lookupInt    "maxISLen"         config),
-	    maxRISLen        = fromJust (lookupInt    "maxRISLen"        config),
-	    rouletteExponent = fromJust (lookupDouble "rouletteExponent" config) 
-	  }
-
-      r = Rates     {           
+    r = Rates     {           
 	             pMutate = fromJust (lookupDouble "rateMutate" config),
 	             p1R     = fromJust (lookupDouble "rate1R"     config),
 	             p2R     = fromJust (lookupDouble "rate2R"     config),
@@ -58,7 +57,7 @@ extractParameters config = (r,g,s)
 	             pGT     = fromJust (lookupDouble "rateGT"     config) 
 	  }
 
-      g = Genome    { 
+    g = Genome    { 
 	       terminals     = fromJust (lookupString "genomeTerminals"     config),
 	       nonterminals  = fromJust (lookupString "genomeNonterminals"  config),
 	       geneConnector = fromJust (lookupChar   "genomeGeneConnector" config),
@@ -67,25 +66,34 @@ extractParameters config = (r,g,s)
 	       headLength    = fromJust (lookupInt    "genomeHeadLength"    config)
 	  }
 
+-- split a string into lines, with lines that are not useful removed.
+-- these include empty lines and comment lines that start with a # symbol
+linesWithFilter :: String -> [String]
+linesWithFilter s =
+  let gzlen l = length l > 0
+      notcomment l = head l /= '#'
+  in filter (\l -> (gzlen l) && (notcomment l)) (lines s)
 
 -- checks Config File is sound. Reports first error on failures.
-checkConfig :: String -> Either String Bool
+checkConfig :: [String] -> Either String Bool
 checkConfig s = 
-  multicheck s [isNotEmpty, checkNewLines, 
-                eitherAnd.(map checkDelimiter).lines, 
-                eitherAnd.(map checkMinLineLength).lines]
+  multicheck s [isNotEmpty, 
+                eitherAnd.(map checkDelimiter), 
+                eitherAnd.(map checkMinLineLength)]
 
--- makes a dict out of a long String
-makeDict :: String -> [(String,String)]
-makeDict s =  map mySplit $ lines s
+-- makes a dict out of a list of strings
+makeDict :: [String] -> [(String,String)]
+makeDict s =  map mySplit (filter (\l -> length l > 0) s)
 
 -- splits a line based on '=' char
 mySplit :: String -> (String,String)
 mySplit s = (a,b) where
-	a = takeWhile (/='=') s
-	b = drop (length a +1) s
+	a = takeWhile (/= '=') s
+	b = drop (length a + 1) s
 
--- checks a type against many predicates. The latter are a List of Either Bool String, so you get Left True or a Right String with an error message. It stops at first failed check.
+-- checks a type against many predicates. The latter are a List of
+-- Either Bool String, so you get Right True or a Left String with an
+-- error message. It stops at first failed check.
 multicheck :: a -> [a -> Either String Bool] -> Either String Bool
 multicheck _ []     = Right True
 multicheck x (f:fs) = case (f x) of
@@ -96,11 +104,6 @@ multicheck x (f:fs) = case (f x) of
 isNotEmpty :: (Show a) => [a] -> Either String Bool
 isNotEmpty l = if null l then Left "List is empty on imput." 
                          else Right True
-
--- checks there are no empty lines interspersed into a bigger String.
-checkNewLines :: String -> Either String Bool
-checkNewLines s = if (not $ elem "" $ lines s) then Right True 
-                                               else Left $ "Failed checkNewLines on input:\n\n" ++ s ++ "\n"
 
 -- checks there is exactly one '=' char in a String.
 checkDelimiter :: String -> Either String Bool
@@ -123,7 +126,7 @@ eitherAnd (x:xs) = case x of
 	Left a -> Left a
 
 -- remove every occurrence of ANY Char in the first String, from the second one.	
-remove::String->String->String
+remove :: String -> String -> String
 remove _ "" = ""
 remove xs (y:ys) = if elem y xs then remove xs ys else y : remove xs ys
 
@@ -137,7 +140,8 @@ count _ [] = 0
 count x (y:ys) = if x==y then 1 + (count x ys) else count x ys
 
 -- generic lookup fuction, implemented with monadic code.
-lookUpThing:: (Read a) => (String-> Maybe a)->String -> [(String,String)] -> Maybe a
+lookUpThing:: (Read a) => (String-> Maybe a) -> String -> [(String,String)] 
+                       -> Maybe a
 lookUpThing f k dict = (lookup k dict) >>= f
 
 -- curried versions of LookUpThing, to serve as utils.

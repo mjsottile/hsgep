@@ -27,7 +27,10 @@ main = do
   cmdOpts <- handleCommandLine "HSGEP_Regression"
   
   -- read parameters
-  (rs,gnome,params) <- readParameters (optParams cmdOpts)
+  p <- readParameters (optParams cmdOpts)
+  let (rs,gnome,params) = case p of
+                            Right r -> r
+                            Left err -> error err
   
   -- read fitness test data
   (testDict, ys) <- readFitnessInput (optFitness cmdOpts)
